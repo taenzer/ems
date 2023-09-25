@@ -18,12 +18,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/events', function (){
+    return view('event.index', [
+        'events' => Event::all() 
+    ]);
+})->name("event");
 
 Route::get('/events/{event}', function (Event $event){
-    return view('event.view',[
+    return view('event.show',[
         'event' => $event
     ]);
-});
+})->name("event.show");
 
 Route::get('/dashboard', function () {
     return view('dashboard');
