@@ -19,13 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('events', [EventController::class, 'index'])->name("event");
-Route::post('events', [EventController::class, 'store'])->name("event.store");
+Route::get('events', [EventController::class, 'index'])->name("event")->middleware('auth');
+Route::post('events', [EventController::class, 'store'])->name("event.store")->middleware('auth');
 
-Route::get('events/show/{event}', [EventController::class, 'show'])->name("event.show");
-Route::get('events/edit/{event}', [EventController::class, 'edit'])->name("event.edit");
-Route::get('events/create', [EventController::class, 'create'])->name("event.create");
-Route::patch('events/update/{event}', [EventController::class, 'update'])->name("event.update");
+Route::get('events/show/{event}', [EventController::class, 'show'])->name("event.show")->middleware('auth');
+Route::get('events/edit/{event}', [EventController::class, 'edit'])->name("event.edit")->middleware('auth');
+Route::get('events/create', [EventController::class, 'create'])->name("event.create")->middleware('auth');
+Route::patch('events/update/{event}', [EventController::class, 'update'])->name("event.update")->middleware('auth');
 
 
 Route::get('/dashboard', function () {
