@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Event;
 use Illuminate\Support\Facades\Route;
@@ -19,13 +20,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('events', [EventController::class, 'index'])->name("event")->middleware('auth');
-Route::post('events', [EventController::class, 'store'])->name("event.store")->middleware('auth');
 
-Route::get('events/show/{event}', [EventController::class, 'show'])->name("event.show")->middleware('auth');
-Route::get('events/edit/{event}', [EventController::class, 'edit'])->name("event.edit")->middleware('auth');
-Route::get('events/create', [EventController::class, 'create'])->name("event.create")->middleware('auth');
-Route::patch('events/update/{event}', [EventController::class, 'update'])->name("event.update")->middleware('auth');
+Route::middleware('auth')->group(function (){
+    Route::resource('events', EventController::class);
+    Route::resource('products', ProductController::class);
+});
+
 
 
 Route::get('/dashboard', function () {

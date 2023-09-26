@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-header heading="{{ $event->name }}">
             <x-slot name="beforeHeading">
-                <a href="{{ route("events.index")}}" class="opacity-50">
+                <a href="{{ route("event")}}" class="opacity-50">
                     <x-icon name="chevron-left"/>
                 </a>
             </x-slot>
@@ -10,7 +10,7 @@
                 <x-event-active :active="$event->active"/>
             </x-slot>
             <x-slot name="actions">
-                <a href="{{ route('events.edit', ['event' => $event]) }}">
+                <a href="{{ route('event.edit', ['event' => $event]) }}">
                     <x-primary-button>Bearbeiten</x-primary-button>
                 </a>
                 <x-secondary-button>{{ $event->active ? "Deaktivieren" : "Aktivieren" }}</x-secondary-button>

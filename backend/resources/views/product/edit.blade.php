@@ -4,7 +4,7 @@
     </x-slot>
     <x-body>
         <x-body-box>
-            <form action="{{ route("events.update", ["event" => $event]) }}" method="post">
+            <form action="{{ route("event.update", ["event" => $event]) }}" method="post">
                 @csrf
                 @method("PATCH")
 

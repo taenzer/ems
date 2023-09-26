@@ -76,7 +76,7 @@ class EventController extends Controller
         ]);
 
         $event->update($attributes);
-        return redirect(route("event.show", ["event" => $event]))->with('success', 'Event aktualisiert');
+        return redirect(route("events.show", ["event" => $event]))->with('success', 'Event aktualisiert');
     }
 
     /**

@@ -16,16 +16,16 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                    <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.index')">
                         {{ __('Events') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                    <x-nav-link href="route('products')" :active="request()->routeIs('products')">
                         {{ __('Produkte') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                    <x-nav-link href="" :active="request()->routeIs('tickets')">
                         {{ __('Tickets') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                    <x-nav-link href="" :active="request()->routeIs('sales')">
                         {{ __('Verkäufe') }}
                     </x-nav-link>
                 </div>
