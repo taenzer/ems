@@ -1,8 +1,21 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ $event->name }}
-        </h2>
+        <x-header heading="{{ $event->name }}">
+            <x-slot name="beforeHeading">
+                <a href="{{ route("event")}}" class="opacity-50">
+                    <x-icon name="chevron-left"/>
+                </a>
+            </x-slot>
+            <x-slot name="afterHeading" >
+                <x-event-active :active="$event->active"/>
+            </x-slot>
+            <x-slot name="actions">
+                <a href="{{ route('event.edit', ['event' => $event]) }}">
+                    <x-primary-button>Bearbeiten</x-primary-button>
+                </a>
+                <x-secondary-button>{{ $event->active ? "Deaktivieren" : "Aktivieren" }}</x-secondary-button>
+            </x-slot>
+        </x-header>
     </x-slot>
 
     <x-body>
@@ -18,10 +31,10 @@
                 <tbody>
                     <tr>
                         <td>
-                            {{ $event->date->format("d.m.Y") }}
+                            {{ $event->dateString() }}
                         </td>
                         <td>
-                            {{ $event->time->format("H:i") }}
+                            {{ $event->timeString() }}
                         </td>
                     </tr>
                 </tbody>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Event;
 use Illuminate\Support\Facades\Route;
@@ -18,17 +19,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/events', function (){
-    return view('event.index', [
-        'events' => Event::all() 
-    ]);
-})->name("event");
+Route::get('events', [EventController::class, 'index'])->name("event");
+Route::post('events', [EventController::class, 'store'])->name("event.store");
 
-Route::get('/events/{event}', function (Event $event){
-    return view('event.show',[
-        'event' => $event
-    ]);
-})->name("event.show");
+Route::get('events/show/{event}', [EventController::class, 'show'])->name("event.show");
+Route::get('events/edit/{event}', [EventController::class, 'edit'])->name("event.edit");
+Route::get('events/create', [EventController::class, 'create'])->name("event.create");
+Route::patch('events/update/{event}', [EventController::class, 'update'])->name("event.update");
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
