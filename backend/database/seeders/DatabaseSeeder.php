@@ -19,5 +19,13 @@ class DatabaseSeeder extends Seeder
              'email' => 'admin@der-taenzer.net',
              'password' => '$2y$10$bYhzpsczfNrhE6/Pt7pdKOnyLF6e15WAmXSkPIlYOJ3P7bdw/YO3u'
          ]);
+
+         $e = new \App\Models\Event();
+         $e->name = "Halloweenparty";
+         $e->date = "2023-10-30";
+         $e->time = "20:00";
+         $e->user_id = 1;
+         $e->save();
+         
     }
 }
