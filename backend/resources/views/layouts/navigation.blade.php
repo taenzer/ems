@@ -19,6 +19,15 @@
                     <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                         {{ __('Events') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                        {{ __('Produkte') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                        {{ __('Tickets') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                        {{ __('Verkäufe') }}
+                    </x-nav-link>
                 </div>
             </div>
 
