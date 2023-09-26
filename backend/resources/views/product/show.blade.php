@@ -1,52 +1,49 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-header heading="{{ $event->name }}">
+        <x-header heading="{{ $product->name }}">
             <x-slot name="beforeHeading">
-                <a href="{{ route("event")}}" class="opacity-50">
+                <a href="{{ route("products.index")}}" class="opacity-50">
                     <x-icon name="chevron-left"/>
                 </a>
             </x-slot>
-            <x-slot name="afterHeading" >
-                <x-event-active :active="$event->active"/>
-            </x-slot>
             <x-slot name="actions">
-                <a href="{{ route('event.edit', ['event' => $event]) }}">
+                <a href="{{ route('products.edit', ['product' => $product]) }}">
                     <x-primary-button>Bearbeiten</x-primary-button>
                 </a>
-                <x-secondary-button>{{ $event->active ? "Deaktivieren" : "Aktivieren" }}</x-secondary-button>
             </x-slot>
         </x-header>
     </x-slot>
 
     <x-body>
+       
         <x-body-box>
-            <h3 class="font-semibold">Veranstaltungsdaten</h3>
+            <h3 class="mb-2 font-semibold">Produktdaten</h3>
             <table>
                 <thead>
                     <tr>
-                        <td>Datum</td>
-                        <td>Uhrzeit</td>
+                        <td>Produkttyp</td>
+                        <td>Standardpreis</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>
-                            {{ $event->dateString() }}
+                            {{ $product->type() }}
                         </td>
                         <td>
-                            {{ $event->timeString() }}
+                            @money($product->default_price) 
                         </td>
                     </tr>
                 </tbody>
             </table>
         </x-body-box>
         <x-body-box>
-            <h3 class="mb-2 font-semibold">Tickets</h3>
-            <x-link-button link="/events/{{$event->id}}/add/tickets">Tickets hinzufügen</x-link-button>
+            <h3 class="mb-2 font-semibold">Verkaufsstatistik</h3>
+
         </x-body-box>
         <x-body-box>
-            <h3 class="mb-2 font-semibold">Produkte</h3>
-            <x-link-button link="/events/{{$event->id}}/add/products">Produkte hinzufügen</x-link-button>
+            <h3 class="mb-2 font-semibold">Verknüpfte Events</h3>
+
         </x-body-box>
 
     </x-body>

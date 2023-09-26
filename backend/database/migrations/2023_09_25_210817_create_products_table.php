@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->enum("type", ["food", "drink"]);
+            $table->enum("type", array_keys(\App\Models\Product::getTypes()));
             $table->double("default_price");
             $table->string("image")->nullable();
+            $table->foreignId("user_id")->constrained()->cascadeOnDelete();
             $table->timestamps();
         }); 
     }

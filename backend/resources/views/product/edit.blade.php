@@ -1,29 +1,33 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-header heading="Event bearbeiten: {{ $event->name }}"></x-header>
+        <x-header heading="Produkt bearbeiten: {{$product->name}}"></x-header>
     </x-slot>
     <x-body>
         <x-body-box>
-            <form action="{{ route("event.update", ["event" => $event]) }}" method="post">
+            <form action="{{ route("products.update", ["product" => $product]) }}" method="post">
                 @csrf
                 @method("PATCH")
 
                 <x-input 
                 name="name" 
-                label="Name der Veranstaltung"
-                value="{{ $event->name }}"
+                label="Produktbezeichnung"
+                value="{{ $product->name }}"
                 />
-                <x-input 
-                name="date" 
-                label="Datum"
-                type="date"
-                value="{{ $event->date }}"
-                />
-                <x-input 
-                name="time" 
-                label="Uhrzeit"
-                type="time"
-                value="{{ $event->time }}"
+                <x-select 
+                name="type" 
+                label="Produktkategorie"
+                >
+                    @foreach (\App\Models\Product::getTypes() as $type => $typeName)
+                        <option value="{{ $type }}" {{ $type == $product->type ? "selected" : ""}}>{{ $typeName }}</option>
+                    @endforeach
+                </x-select>
+
+                        <x-input 
+                name="default_price" 
+                label="Standardpreis (EUR)"
+                type="number"
+                step="0.01"
+                value="{{ $product->default_price }}"
                 />
                 <x-primary-button>Speichern</x-primary-button>
 
