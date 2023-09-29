@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventProductLinkController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Event;
@@ -24,6 +25,9 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function (){
     Route::resource('events', EventController::class);
     Route::resource('products', ProductController::class);
+
+    Route::get('events/{event}/products/add', [EventProductLinkController::class, 'create'])->name("events.products.add");
+    Route::post('events/{event}/products/add', [EventProductLinkController::class, 'store'])->name("events.products.store");
 });
 
 
