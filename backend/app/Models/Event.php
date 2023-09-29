@@ -26,4 +26,8 @@ class Event extends Model
     public function timeString(){
         return Carbon::parse($this->time)->format("H:i")." Uhr";
     }
+
+    public function products(){
+        return $this->belongsToMany(Product::class)->as("product_data")->withPivot(['price', 'prio'])->withTimestamps();
+    }
 }

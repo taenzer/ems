@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use HasFactory;
     protected $fillable = ["name", "type", "default_price", "user_id"];
     public static function getTypes(){
         return ["food" => "Speisen", "drinks" => "Getränke"];
@@ -15,5 +16,8 @@ class Product extends Model
     public function type(){
         return Product::getTypes()[$this->type] ?? "?";
     }
-    use HasFactory;
+    
+    public function events(){
+        return $this->belongsToMany(Event::class)->as("product_data")->withPivot(["price"])->withTimestamps();
+    }
 }
