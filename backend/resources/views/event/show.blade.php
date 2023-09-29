@@ -46,7 +46,7 @@
         </x-body-box>
         <x-body-box>
             <h3 class="mb-2 font-semibold">Produkte</h3>
-            <x-link-button link="/events/{{$event->id}}/add/products">Produkte hinzufügen</x-link-button>
+            <x-link-button :link="route('events.products.add', $event)">Produkte hinzufügen</x-link-button>
         </x-body-box>
 
     </x-body>
