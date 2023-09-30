@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EventProductLinkController extends Controller
 {
@@ -23,19 +24,26 @@ class EventProductLinkController extends Controller
     {
         return view("event_product_link.create", [
             "event" => $event,
-            "products" => Product::all()
+            "product_sets" => Product::orderBy("type", "DESC")->orderBy("name", "ASC")->get()->groupBy("type")
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Event $event)
     {
+
+
         $attributes = $request->validate([
-            "products" => "required"
+                    "products" => "required|array|min:1",
+                    "products.*" => "required|array:product_id,price",
+                    "products.*.product_id" => "required_with:products.*|integer",
+                    "products.*.price" => "required_with:products.*|numeric"
         ]);
-        dd($attributes);
+        $event->products()->attach($attributes["products"]);
+       
+        return redirect(route("events.show", ["event" => $event]));
     }
 
     /**
