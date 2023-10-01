@@ -53,7 +53,7 @@
                     @csrf
                 @method("PATCH")
                 @foreach ($event->products->groupBy("type") as $type => $products)
-                <x-body-section title="{{$type}}" class="basis-2/4 grow">
+                <x-body-section title="{{\App\Models\Product::getTypes()[$type] }}" class="basis-2/4 grow">
                     <div class="flex flex-col gap-2">
                         @foreach ($products as $product)
                             
