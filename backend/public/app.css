@@ -1,0 +1,19 @@
+/* Disable Numeric Input Arrows */
+
+input.no-arrows::-webkit-outer-spin-button,
+input.no-arrows::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input.no-arrows[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.auto-width-input-wrap:has(.auto-width-input:disabled) > span {
+    color: gainsboro;
+}
+.auto-width-input:disabled,
+.auto-width-input:disabled + .after-auto-width-input {
+    color: gainsboro;
+    border-color: gainsboro;
+}
