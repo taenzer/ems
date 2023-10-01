@@ -67,7 +67,6 @@
                                                 <span>{{ $product->name }}</span>
                                             </div>
 
-                                            <p x-text="prio"></p>
                                             <div class="flex items-center gap-2">
                                                 <x-input.auto-width name="products[{{ $product->id }}][price]"
                                                     before="Preis:" after="€"
