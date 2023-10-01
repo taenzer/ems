@@ -22,13 +22,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function (){
+Route::middleware('auth')->group(function () {
     Route::resource('events', EventController::class);
     Route::resource('products', ProductController::class);
 
     Route::get('events/{event}/products/add', [EventProductLinkController::class, 'create'])->name("events.products.add");
     Route::post('events/{event}/products/add', [EventProductLinkController::class, 'store'])->name("events.products.store");
     Route::patch('events/{event}/products/', [EventProductLinkController::class, 'update'])->name("events.products.update");
+    Route::delete('events/{event}/products/', [EventProductLinkController::class, 'destroy'])->name("events.products.destroy");
 });
 
 
@@ -43,4 +44,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

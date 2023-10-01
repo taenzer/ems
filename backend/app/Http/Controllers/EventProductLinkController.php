@@ -24,7 +24,7 @@ class EventProductLinkController extends Controller
     public function create(Event $event)
     {
 
-        $products = Product::whereDoesntHave('events', function (Builder $query) use($event) {
+        $products = Product::whereDoesntHave('events', function (Builder $query) use ($event) {
             $query->where('id', '=', $event->id);
         })->orderBy("type", "DESC")->orderBy("name", "ASC")->get();
 
@@ -42,13 +42,13 @@ class EventProductLinkController extends Controller
 
 
         $attributes = $request->validate([
-                    "products" => "required|array|min:1",
-                    "products.*" => "required|array:product_id,price",
-                    "products.*.product_id" => "required_with:products.*|integer|exists:products,id",
-                    "products.*.price" => "required_with:products.*|numeric"
+            "products" => "required|array|min:1",
+            "products.*" => "required|array:product_id,price",
+            "products.*.product_id" => "required_with:products.*|integer|exists:products,id",
+            "products.*.price" => "required_with:products.*|numeric"
         ]);
         $event->products()->attach($attributes["products"]);
-       
+
         return redirect(route("events.show", ["event" => $event]));
     }
 
@@ -74,22 +74,28 @@ class EventProductLinkController extends Controller
     public function update(Request $request, Event $event)
     {
         $attributes = $request->validate([
-                    "products" => "required|array|min:1",
-                    "products.*" => "required|array:product_id,price",
-                    "products.*.product_id" => "required_with:products.*|integer|exists:products,id",
-                    "products.*.price" => "required_with:products.*|numeric"
+            "products" => "required|array|min:1",
+            "products.*" => "required|array:product_id,price,prio",
+            "products.*.product_id" => "required_with:products.*|integer|exists:products,id",
+            "products.*.price" => "required_with:products.*|numeric",
+            "products.*.prio" => "integer"
         ]);
 
         $event->products()->sync($attributes["products"]);
-       
+
         return redirect(route("events.show", ["event" => $event]));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, Event $event)
     {
-        //
+        $attributes = $request->validate([
+            "product_id" => "required|exists:products,id"
+        ]);
+
+        $event->products()->detach($attributes["product_id"]);
+        return redirect(route("events.show", ["event" => $event]));
     }
 }
