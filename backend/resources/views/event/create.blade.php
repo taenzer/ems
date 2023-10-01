@@ -4,7 +4,7 @@
     </x-slot>
     <x-body>
         <x-body-box>
-            <form action="{{ route("event.store") }}" method="post">
+            <form action="{{ route("events.store") }}" method="post">
                 @csrf
                 <x-input 
                 name="name" 
