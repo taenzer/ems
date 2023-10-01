@@ -41,7 +41,7 @@ class EventController extends Controller
 
         $event = Event::create($attributes);
 
-        return redirect(route("event.show", ["event" => $event]));
+        return redirect(route("events.show", ["event" => $event]));
     }
 
     /**
@@ -50,7 +50,8 @@ class EventController extends Controller
     public function show(Event $event)
     {
         return view('event.show',[
-            'event' => $event
+            'event' => $event,
+            'product_sets' => $event->products->sortBy("type")->groupBy("type")
         ]);
     }
 
