@@ -13,7 +13,7 @@ class EventController extends Controller
     public function index()
     {
         return view('event.index', [
-        'events' => Event::all() 
+            'events' => Event::all()
         ]);
     }
 
@@ -29,11 +29,11 @@ class EventController extends Controller
      * Store a newly created resource in storage.
      */
     public function store()
-    {   
+    {
         $attributes = request()->validate([
             'name' => 'required',
             'date' => 'required|date_format:Y-m-d|after:yesterday',
-            'time' => 'required|date_format:H:i'   
+            'time' => 'required|date_format:H:i'
         ]);
 
 
@@ -49,9 +49,12 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return view('event.show',[
+        $prods = $event->products()->orderByPivot("prio", "desc")->get();
+
+        return view('event.show', [
             'event' => $event,
-            'product_sets' => $event->products->sortBy("type")->groupBy("type")
+            'products' => $prods,
+            'product_sets' => $prods->sortBy("type")->groupBy("type")
         ]);
     }
 
@@ -73,7 +76,7 @@ class EventController extends Controller
         $attributes = request()->validate([
             'name' => 'required',
             'date' => 'required|date_format:Y-m-d|after:yesterday',
-            'time' => 'required|date_format:H:i'   
+            'time' => 'required|date_format:H:i'
         ]);
 
         $event->update($attributes);
