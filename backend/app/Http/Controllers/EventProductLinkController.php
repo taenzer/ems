@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,9 +23,14 @@ class EventProductLinkController extends Controller
      */
     public function create(Event $event)
     {
+
+        $products = Product::whereDoesntHave('events', function (Builder $query) use($event) {
+            $query->where('id', '=', $event->id);
+        })->orderBy("type", "DESC")->orderBy("name", "ASC")->get();
+
         return view("event_product_link.create", [
             "event" => $event,
-            "product_sets" => Product::orderBy("type", "DESC")->orderBy("name", "ASC")->get()->groupBy("type")
+            "product_sets" => $products->groupBy("type")
         ]);
     }
 
@@ -38,7 +44,7 @@ class EventProductLinkController extends Controller
         $attributes = $request->validate([
                     "products" => "required|array|min:1",
                     "products.*" => "required|array:product_id,price",
-                    "products.*.product_id" => "required_with:products.*|integer",
+                    "products.*.product_id" => "required_with:products.*|integer|exists:products,id",
                     "products.*.price" => "required_with:products.*|numeric"
         ]);
         $event->products()->attach($attributes["products"]);
@@ -65,9 +71,18 @@ class EventProductLinkController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Event $event)
     {
-        //
+        $attributes = $request->validate([
+                    "products" => "required|array|min:1",
+                    "products.*" => "required|array:product_id,price",
+                    "products.*.product_id" => "required_with:products.*|integer|exists:products,id",
+                    "products.*.price" => "required_with:products.*|numeric"
+        ]);
+
+        $event->products()->sync($attributes["products"]);
+       
+        return redirect(route("events.show", ["event" => $event]));
     }
 
     /**
