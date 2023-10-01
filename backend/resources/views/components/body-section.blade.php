@@ -5,6 +5,5 @@
         <div class="flex-grow bg-gray-400" style="height: 1px"></div>
 
     </div>
-    <div></div>
     {{ $slot }}
 </div>

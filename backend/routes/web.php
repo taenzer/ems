@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function (){
 
     Route::get('events/{event}/products/add', [EventProductLinkController::class, 'create'])->name("events.products.add");
     Route::post('events/{event}/products/add', [EventProductLinkController::class, 'store'])->name("events.products.store");
+    Route::patch('events/{event}/products/', [EventProductLinkController::class, 'update'])->name("events.products.update");
 });
 
 

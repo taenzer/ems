@@ -47,6 +47,51 @@
         <x-body-box>
             <h3 class="mb-2 font-semibold">Produkte</h3>
             <x-link-button :link="route('events.products.add', $event)">Produkte hinzufügen</x-link-button>
+
+            <form action="{{ route("events.products.update", ["event" => $event]) }}" method="POST">
+                <div class="flex gap-4">
+                    @csrf
+                @method("PATCH")
+                @foreach ($event->products->groupBy("type") as $type => $products)
+                <x-body-section title="{{$type}}" class="basis-2/4 grow">
+                    <div class="flex flex-col gap-2">
+                        @foreach ($products as $product)
+                            
+                            <div class="flex bg-slate-100 rounded py-2 px-4 items-center justify-between">
+                                <div class="flex gap-2 items-center">
+                                    <span><x-icon name="drag-indicator"/></span>
+                                    <span>{{ $product->name }}</span>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <x-input.auto-width 
+                                        name="products[{{$product->id }}][price]"
+                                        before="Preis:"
+                                        after="€"
+                                        value="{{$product->product_data->price}}"
+                                        required
+                                        min="-9999"
+                                        max="9999"
+                                        inputmode="numeric"
+                                    />
+                                    <span><x-icon name="link-off" color="red" size="1"/></span>
+                                </div>
+                                
+                                <input type="hidden" name="products[{{$product->id }}][product_id]" value="{{ $product->id }}">
+                            </div>
+
+                        @endforeach
+                    </div>
+
+
+                </x-body-section>
+                @endforeach
+
+                </div>
+                
+                <x-primary-button>Speichern</x-primary-button>
+            </form>
+            
         </x-body-box>
 
     </x-body>

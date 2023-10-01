@@ -14,10 +14,20 @@
             <span>{{$name}}</span>
         </div>
         <div>
-            <label for="products[{{ $id }}][price]">Preis: </label>
+            
             <input x-bind:disabled="!active" type="hidden" name="products[{{ $id }}][product_id]" value="{{ $id }}">
-            <input x-bind:disabled="!active" name="products[{{ $id }}][price]" id="products[{{ $id }}][price]" class="text-right border-0 p-0 bg-transparent italic" id="pr_price" type="number" max="99" min="-99" step="0.01" value="{{ $default_price }}">
-            <span>€</span>
+            <x-input.auto-width
+                before="Preis:"
+                after="€"
+                name="products[{{ $id }}][price]"
+                type="number" 
+                max="9999"
+                min="-9999"
+                step="0.01"
+                value="{{ $default_price }}"
+                x-bind:disabled="!active"
+            />
+
         </div>
     </div>
 </label>
