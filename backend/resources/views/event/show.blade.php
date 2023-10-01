@@ -2,18 +2,18 @@
     <x-slot name="header">
         <x-header heading="{{ $event->name }}">
             <x-slot name="beforeHeading">
-                <a href="{{ route("events.index")}}" class="opacity-50">
-                    <x-icon name="chevron-left"/>
+                <a href="{{ route('events.index') }}" class="opacity-50">
+                    <x-icon name="chevron-left" />
                 </a>
             </x-slot>
-            <x-slot name="afterHeading" >
-                <x-event-active :active="$event->active"/>
+            <x-slot name="afterHeading">
+                <x-event-active :active="$event->active" />
             </x-slot>
             <x-slot name="actions">
                 <a href="{{ route('events.edit', ['event' => $event]) }}">
                     <x-primary-button>Bearbeiten</x-primary-button>
                 </a>
-                <x-secondary-button>{{ $event->active ? "Deaktivieren" : "Aktivieren" }}</x-secondary-button>
+                <x-secondary-button>{{ $event->active ? 'Deaktivieren' : 'Aktivieren' }}</x-secondary-button>
             </x-slot>
         </x-header>
     </x-slot>
@@ -42,59 +42,63 @@
         </x-body-box>
         <x-body-box>
             <h3 class="mb-2 font-semibold">Tickets</h3>
-            <x-link-button link="/events/{{$event->id}}/add/tickets">Tickets hinzufügen</x-link-button>
+            <x-link-button link="/events/{{ $event->id }}/add/tickets">Tickets hinzufügen</x-link-button>
         </x-body-box>
         <x-body-box>
             <h3 class="mb-2 font-semibold">Produkte</h3>
-            <x-link-button :link="route('events.products.add', $event)">Produkte hinzufügen</x-link-button>
 
-            <form action="{{ route("events.products.update", ["event" => $event]) }}" method="POST">
-                <div class="flex gap-4">
-                    @csrf
-                @method("PATCH")
-                @foreach ($event->products->groupBy("type") as $type => $products)
-                <x-body-section title="{{\App\Models\Product::getTypes()[$type] }}" class="basis-2/4 grow">
-                    <div class="flex flex-col gap-2">
-                        @foreach ($products as $product)
-                            
-                            <div class="flex bg-slate-100 rounded py-2 px-4 items-center justify-between">
-                                <div class="flex gap-2 items-center">
-                                    <span><x-icon name="drag-indicator"/></span>
-                                    <span>{{ $product->name }}</span>
+            @if ($product_sets->isNotEmpty())
+                <form action="{{ route('events.products.update', ['event' => $event]) }}" method="POST">
+                    <div class="flex gap-4 mb-6">
+                        @csrf
+                        @method('PATCH')
+                        @foreach ($product_sets as $type => $products)
+                            <x-body-section title="{{ \App\Models\Product::getTypes()[$type] }}" class="basis-2/4 grow">
+                                <div class="flex flex-col gap-2">
+                                    @foreach ($products as $product)
+                                        <div class="flex bg-slate-100 rounded py-2 px-4 items-center justify-between">
+                                            <div class="flex gap-2 items-center">
+                                                <span><x-icon name="drag-indicator" /></span>
+                                                <span>{{ $product->name }}</span>
+                                            </div>
+
+                                            <div class="flex items-center gap-2">
+                                                <x-input.auto-width name="products[{{ $product->id }}][price]"
+                                                    before="Preis:" after="€"
+                                                    value="{{ $product->product_data->price }}" required min="-9999"
+                                                    max="9999" inputmode="numeric" />
+                                                <span><x-icon name="link-off" color="red" size="1" /></span>
+                                            </div>
+
+                                            <input type="hidden" name="products[{{ $product->id }}][product_id]"
+                                                value="{{ $product->id }}">
+                                        </div>
+                                    @endforeach
                                 </div>
 
-                                <div class="flex items-center gap-2">
-                                    <x-input.auto-width 
-                                        name="products[{{$product->id }}][price]"
-                                        before="Preis:"
-                                        after="€"
-                                        value="{{$product->product_data->price}}"
-                                        required
-                                        min="-9999"
-                                        max="9999"
-                                        inputmode="numeric"
-                                    />
-                                    <span><x-icon name="link-off" color="red" size="1"/></span>
-                                </div>
-                                
-                                <input type="hidden" name="products[{{$product->id }}][product_id]" value="{{ $product->id }}">
-                            </div>
 
+                            </x-body-section>
                         @endforeach
+
                     </div>
 
+                    <x-primary-button>Änderungen Speichern</x-primary-button>
+                    <a href="{{ route('events.products.add', $event) }}">
+                        <x-secondary-button>Neue Produkte hinzufügen</x-secondary-button>
+                    </a>
 
-                </x-body-section>
-                @endforeach
-
+                </form>
+            @else
+                <div class="flex flex-col justify-center items-center p-6 gap-2 bg-slate-50">
+                    <p>Es wurden noch keine Produkte hinzugefügt</p>
+                    <x-link-button :link="route('events.products.add', $event)">Produkte hinzufügen</x-link-button>
                 </div>
-                
-                <x-primary-button>Speichern</x-primary-button>
-            </form>
-            
+
+            @endif
+
         </x-body-box>
 
     </x-body>
 
-    
+
 </x-app-layout>

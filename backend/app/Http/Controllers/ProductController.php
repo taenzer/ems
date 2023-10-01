@@ -13,7 +13,7 @@ class ProductController extends Controller
     public function index()
     {
         return view('product.index', [
-            'product_sets' => Product::all()->groupBy("type"),
+            'product_sets' => Product::all()->groupBy('type'),
         ]);
     }
 
@@ -33,15 +33,14 @@ class ProductController extends Controller
         $attributes = request()->validate([
             'name' => 'required',
             'type' => 'required',
-            'default_price' => 'required'   
+            'default_price' => 'required',
         ]);
-
 
         $attributes['user_id'] = auth()->id();
 
         $product = Product::create($attributes);
 
-        return redirect(route("products.show", ["product" => $product]));
+        return redirect(route('products.show', ['product' => $product]));
     }
 
     /**
@@ -50,7 +49,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return view('product.show', [
-            "product" => $product
+            'product' => $product,
         ]);
     }
 
@@ -60,7 +59,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         return view('product.edit', [
-           "product" => $product
+            'product' => $product,
         ]);
     }
 
@@ -72,11 +71,11 @@ class ProductController extends Controller
         $attributes = request()->validate([
             'name' => 'required',
             'type' => 'required',
-            'default_price' => 'required'   
+            'default_price' => 'required',
         ]);
 
         $product->update($attributes);
-        return redirect(route("products.show", ["product" => $product]))->with('success', 'Produkt aktualisiert');
+        return redirect(route('products.show', ['product' => $product]))->with('success', 'Produkt aktualisiert');
     }
 
     /**
