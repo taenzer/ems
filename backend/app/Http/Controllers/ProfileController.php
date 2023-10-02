@@ -57,4 +57,22 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function devices(Request $request)
+    {
+        return view("profile.devices", [
+            "user" => $request->user()
+        ]);
+    }
+
+    public function removeDevice(Request $request)
+    {
+        $request->validate([
+            "device_id" => "required|integer|exists:personal_access_tokens,id"
+        ]);
+
+        $user = $request->user();
+        $user->tokens()->where('id', $request->device_id)->delete();
+        return redirect(route("profile.devices"));
+    }
 }

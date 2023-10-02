@@ -51,7 +51,7 @@
                             {{ __('Profil') }}
                         </x-dropdown-link>
 
-                        <x-dropdown-link :href="route('profile.tokens')">
+                        <x-dropdown-link :href="route('profile.devices')">
                             {{ __('Geräte verwalten') }}
                         </x-dropdown-link>
 
