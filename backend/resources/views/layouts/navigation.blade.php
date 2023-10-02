@@ -48,7 +48,11 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Profil') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('profile.tokens')">
+                            {{ __('Geräte verwalten') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
