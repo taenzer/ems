@@ -24,6 +24,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('events', EventController::class);
+    Route::put("events/{event}/status", [EventController::class, 'toggleStatus'])->name("events.status.toggle");
     Route::resource('products', ProductController::class);
 
     Route::get('events/{event}/products/add', [EventProductLinkController::class, 'create'])->name("events.products.add");

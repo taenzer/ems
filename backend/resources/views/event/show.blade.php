@@ -13,7 +13,11 @@
                 <a href="{{ route('events.edit', ['event' => $event]) }}">
                     <x-primary-button>Bearbeiten</x-primary-button>
                 </a>
-                <x-secondary-button>{{ $event->active ? 'Deaktivieren' : 'Aktivieren' }}</x-secondary-button>
+                <form action="{{ route("events.status.toggle", ["event" => $event])}}" method="POST">
+                    @csrf 
+                    @method("PUT")
+                    <x-secondary-button type="submit">{{ $event->active ? 'Deaktivieren' : 'Aktivieren' }}</x-secondary-button>
+                </form>
             </x-slot>
         </x-header>
     </x-slot>

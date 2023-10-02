@@ -90,4 +90,14 @@ class EventController extends Controller
     {
         //
     }
+
+
+    public function toggleStatus(Event $event)
+    {
+        $event->active = !$event->active;
+        $event->save();
+        return redirect(route("events.show", [
+            "event" => $event
+        ]));
+    }
 }
