@@ -5,12 +5,14 @@ name: default
 steps:
   - name: test
     image: plugins/docker
-    volumes:
-      - name: dockersock
-        path: "/var/run/docker.sock" # Mandatory
+    #volumes:
+    #  - name: dockersock
+    #    path: "/var/run/docker.sock" # Mandatory
     settings: 
+      registry: drone_registry:5000
       username: 12
       password: abc
+      
       repo: tnz/test
       tags: 1.0
       dockerfile: ./backend/Dockerfile
