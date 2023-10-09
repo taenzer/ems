@@ -8,13 +8,9 @@ name: sv-socialtool
 #  - master
 pipeline:
   build: 
-    image: plugins/docker
-    settings:
-      debug: true
-      repo: tphoney/test
-      tags: latest
-      context: backend
-      dockerfile: backend/Dockerfile
+    image: docker
+    commands:
+      - docker version
 
 
 
