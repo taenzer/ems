@@ -10,10 +10,6 @@ pipeline:
   publish_to_registry:
     image: plugins/docker
     settings:
-      registry: drone_registry:5000
-      repo: foo/bar
-      tags:
-      - latest
       dockerfile: backend/Dockerfile
       
 
