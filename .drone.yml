@@ -3,6 +3,10 @@ kind: pipeline
 name: default
 
 steps:
+  - name: Build Node Dependencies
+    image: node
+    commands:
+    - npm run build
   - name: Create and upload Docker Image
     image: plugins/docker
     settings:
