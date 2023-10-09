@@ -7,5 +7,16 @@ name: sv-socialtool
 #  branch:
 #  - master
 pipeline:
+  publish_to_registry:
+    image: plugins/docker
+    settings:
+      registry: registry
+      repo: foo/bar
+      tags:
+      - latest
+      - main
+      dry_run: true
+      insecure: true
+      
 
   
