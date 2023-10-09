@@ -7,6 +7,7 @@ steps:
     image: node
     commands:
     - cd backend
+    - npm install
     - npm run build
   - name: Create and upload Docker Image
     image: plugins/docker
