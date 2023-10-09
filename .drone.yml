@@ -2,8 +2,8 @@
 kind: pipeline
 name: default
 
-pipeline:
-  test:
+steps:
+  - name: test
     image: plugins/docker
     volumes:
       - name: dockersock
