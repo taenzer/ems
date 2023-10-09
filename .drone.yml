@@ -3,21 +3,19 @@ kind: pipeline
 name: default
 
 steps:
-  - name: test
+  - name: Create and upload Docker Image
     image: plugins/docker
-    #volumes:
-    #  - name: dockersock
-    #    path: "/var/run/docker.sock" # Mandatory
-    settings: 
+    settings:
       registry: registry.der-taenzer.net
-      username: 
+      username:
         from_secret: REGISTRY_USER
-      password: 
+      password:
         from_secret: REGISTRY_PASS
-      
+
       repo: registry.der-taenzer.net/tnz/eventverein-api
-      tags: latest
+      tags:
+        - latest
+        - build-${DRONE_BUILD_NUMBER}
       dockerfile: ./backend/Dockerfile
       context: ./backend
-    
 
