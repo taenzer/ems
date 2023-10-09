@@ -6,12 +6,14 @@ name: sv-socialtool
 #trigger:
 #  branch:
 #  - master
-pipeline:
-  build:
-    image: docker
-    commands:
-      - systemctl start docker
-      - docker build -t deine-laravel-app:latest .
-      - docker tag deine-laravel-app:latest drone_registry:5000/deine-laravel-app:latest
+steps:
+- name: build dummy docker file and publish
+  image: plugins/docker
+  pull: never
+  settings:
+    repo: tphoney/test
+    tags: latest
+    secret: id=mysecret,src=secret-file
+
 
   
