@@ -4,7 +4,8 @@ name: default
 
 steps:
 - name: test
-  image: docker:dind
+  image: docker
+  privileged: true
   volumes:
   - name: dockersock
     path: /var/run
@@ -12,14 +13,3 @@ steps:
   - sleep 5 # give docker enough time to start
   - docker ps -a
 
-services:
-- name: docker
-  image: docker:dind
-  privileged: true
-  volumes:
-  - name: dockersock
-    path: /var/run
-
-volumes:
-- name: dockersock
-  temp: {}
