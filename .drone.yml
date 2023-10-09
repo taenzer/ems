@@ -14,9 +14,7 @@ pipeline:
       repo: foo/bar
       tags:
       - latest
-      dry_run: true
-      insecure: true
-      dockerfile: /backend/Dockerfile
+      dockerfile: backend/Dockerfile
       
 
   
