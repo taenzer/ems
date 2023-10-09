@@ -9,11 +9,10 @@ name: sv-socialtool
 pipeline:
   build:
     image: docker
+    services:
+      - docker:dind
     commands:
       - docker build -t deine-laravel-app:latest .
       - docker tag deine-laravel-app:latest drone_registry:5000/deine-laravel-app:latest
-  push:
-    image: docker
-    commands:
-      - docker push drone_registry:5000/deine-laravel-app:latest
+
   
