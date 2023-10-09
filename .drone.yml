@@ -7,10 +7,10 @@ name: sv-socialtool
 #  branch:
 #  - master
 pipeline:
-  publish_to_registry:
+  publish_to_registry1:
     image: plugins/docker
     settings:
-      context: backend
+      context: backend/
       
 
   
