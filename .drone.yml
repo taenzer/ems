@@ -8,7 +8,7 @@ name: sv-socialtool
 #  - master
 pipeline:
   build: 
-    image: docker
+    image: docker:dind
     commands:
       - docker version
 
