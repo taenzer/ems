@@ -18,5 +18,6 @@ steps:
       repo: tnz/test
       tags: 1.0
       dockerfile: ./backend/Dockerfile
+      context: ./backend
     
 
