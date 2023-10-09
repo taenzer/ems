@@ -13,7 +13,7 @@ steps:
   settings:
     repo: tphoney/test
     tags: latest
-    secret: id=mysecret,src=secret-file
+
 
 
   
