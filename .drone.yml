@@ -17,6 +17,7 @@ pipeline:
       - main
       dry_run: true
       insecure: true
+      dockerfile: "/backend/Dockerfile"
       
 
   
