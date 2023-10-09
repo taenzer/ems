@@ -9,8 +9,8 @@ name: sv-socialtool
 steps:
 - name: build dummy docker file and publish
   image: plugins/docker
-  pull: never
   settings:
+    debug: true
     repo: tphoney/test
     tags: latest
 
