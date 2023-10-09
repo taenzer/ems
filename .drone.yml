@@ -9,9 +9,11 @@ steps:
     #  - name: dockersock
     #    path: "/var/run/docker.sock" # Mandatory
     settings: 
-      registry: drone_registry:5000
-      username: 12
-      password: abc
+      registry: registry.der-taenzer.net
+      username: 
+        from_secret: REGISTRY_USER
+      password: 
+        from_secret: REGISTRY_PASS
       
       repo: tnz/test
       tags: 1.0
