@@ -10,8 +10,7 @@ pipeline:
   publish_to_registry:
     image: plugins/docker
     settings:
-      dockerfile: backend/Dockerfile
-      context: .
+      context: backend
       
 
   
