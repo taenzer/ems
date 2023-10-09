@@ -7,10 +7,22 @@ name: sv-socialtool
 #  branch:
 #  - master
 pipeline:
-  publish_to_registry1:
+  - name: build
     image: plugins/docker
     settings:
-      context: backend/
-      
+      repo: drone_registry:5000/deine-laravel-app:latest
+      tags: [latest]
+
+  - name: push
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: localhost:5000/deine-laravel-app:latest
+      tags: [latest]
+      dockerfile: Dockerfile
+      context: .
 
   
