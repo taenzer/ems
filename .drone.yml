@@ -13,6 +13,8 @@ pipeline:
       debug: true
       repo: tphoney/test
       tags: latest
+      context: ./backend
+      dockerfile: Dockerfile
 
 
 
