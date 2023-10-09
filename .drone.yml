@@ -15,8 +15,8 @@ steps:
       password: 
         from_secret: REGISTRY_PASS
       
-      repo: tnz/test
-      tags: 1.0
+      repo: registry.der-taenzer.net/tnz/eventverein-api
+      tags: latest
       dockerfile: ./backend/Dockerfile
       context: ./backend
     
