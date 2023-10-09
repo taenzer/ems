@@ -10,14 +10,13 @@ pipeline:
   publish_to_registry:
     image: plugins/docker
     settings:
-      registry: registry
+      registry: drone_registry:5000
       repo: foo/bar
       tags:
       - latest
-      - main
       dry_run: true
       insecure: true
-      dockerfile: "/backend/Dockerfile"
+      dockerfile: /backend/Dockerfile
       
 
   
