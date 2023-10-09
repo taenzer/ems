@@ -1,17 +1,25 @@
+---
 kind: pipeline
-type: docker
-name: sv-socialtool
+name: default
 
+steps:
+- name: test
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run
+  commands:
+  - sleep 5 # give docker enough time to start
+  - docker ps -a
 
-#trigger:
-#  branch:
-#  - master
-pipeline:
-  build: 
-    image: docker:dind
-    commands:
-      - docker version
+services:
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
 
-
-
-  
+volumes:
+- name: dockersock
+  temp: {}
