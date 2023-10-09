@@ -15,6 +15,19 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.index')">
+                        {{ __('Events') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
+                        {{ __('Produkte') }}
+                    </x-nav-link>
+                    <x-nav-link href="" :active="request()->routeIs('tickets')">
+                        {{ __('Tickets') }}
+                    </x-nav-link>
+                    <x-nav-link href="" :active="request()->routeIs('sales')">
+                        {{ __('Verkäufe') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -35,7 +48,11 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Profil') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('profile.devices')">
+                            {{ __('Geräte verwalten') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
