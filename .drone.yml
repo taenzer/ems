@@ -6,13 +6,13 @@ name: sv-socialtool
 #trigger:
 #  branch:
 #  - master
-steps:
-- name: build dummy docker file and publish
-  image: plugins/docker
-  settings:
-    debug: true
-    repo: tphoney/test
-    tags: latest
+pipeline:
+  build: 
+    image: plugins/docker
+    settings:
+      debug: true
+      repo: tphoney/test
+      tags: latest
 
 
 
