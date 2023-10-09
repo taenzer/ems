@@ -1,0 +1,20 @@
+---
+kind: pipeline
+name: default
+
+steps:
+  - name: Create and upload Docker Image
+    image: plugins/docker
+    settings:
+      registry: registry.der-taenzer.net
+      username:
+        from_secret: REGISTRY_USER
+      password:
+        from_secret: REGISTRY_PASS
+
+      repo: registry.der-taenzer.net/tnz/eventverein-api
+      tags:
+        - latest
+        - build-${DRONE_BUILD_NUMBER}
+      dockerfile: ./backend/Dockerfile
+      context: ./backend
