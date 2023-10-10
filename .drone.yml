@@ -2,13 +2,17 @@
 kind: pipeline
 name: default
 
+trigger:
+  branch:
+    - main
+
 steps:
   - name: Build Node Dependencies
     image: node
     commands:
-    - cd backend
-    - npm install
-    - npm run build
+      - cd backend
+      - npm install
+      - npm run build
   - name: Create and upload Docker Image
     image: plugins/docker
     settings:
@@ -24,4 +28,7 @@ steps:
         - build-${DRONE_BUILD_NUMBER}
       dockerfile: ./backend/Dockerfile
       context: ./backend
-
+  - name: Refresh Docker Stack
+    image: plugins/webhook
+    settings:
+      urls: http://manager01.der-taenzer.net:9000/api/stacks/webhooks/543292b4-54cb-40e0-94f8-15cb8df825e6?BUILD_NR=${DRONE_BUILD_NUMBER}&BUILD_DATE=${DRONE_BUILD_CREATED}
