@@ -18,6 +18,9 @@
        
         <x-body-box>
             <h3 class="mb-2 font-semibold">Produktdaten</h3>
+            <div >
+                <img src="{{ asset('storage/' . $product->image) }}" alt="Produktbild">
+            </div>
             <table>
                 <thead>
                     <tr>

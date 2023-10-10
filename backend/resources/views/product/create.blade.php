@@ -4,7 +4,7 @@
     </x-slot>
     <x-body>
         <x-body-box>
-            <form action="{{ route("products.store") }}" method="post">
+            <form action="{{ route("products.store") }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <x-input 
                 name="name" 
@@ -20,12 +20,20 @@
                     @endforeach
                 </x-select>
 
-                        <x-input 
+                <x-input 
                 name="default_price" 
                 label="Standardpreis (EUR)"
                 type="number"
                 step="0.01"
                 />
+
+                <x-input.image-cropper
+                name="image"
+                label="Produktbild"
+                />
+
+
+
                 <x-primary-button>Speichern</x-primary-button>
 
             </form>

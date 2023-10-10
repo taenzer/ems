@@ -30,14 +30,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $attributes = request()->validate([
+        $attributes = $request->validate([
             'name' => 'required',
             'type' => 'required',
             'default_price' => 'required',
+            'image' => 'image'
         ]);
 
         $attributes['user_id'] = auth()->id();
-
+        $attributes['image'] = $request->file('image')->store('product_images');
         $product = Product::create($attributes);
 
         return redirect(route('products.show', ['product' => $product]));
