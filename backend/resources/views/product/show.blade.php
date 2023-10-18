@@ -10,6 +10,9 @@
                 <a href="{{ route('products.edit', ['product' => $product]) }}">
                     <x-primary-button>Bearbeiten</x-primary-button>
                 </a>
+                <a href="{{ route('products.create') }}">
+                    <x-secondary-button>Neues Produkt</x-secondary-button>
+                </a>
             </x-slot>
         </x-header>
     </x-slot>
