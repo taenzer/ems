@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Helpers\File\FileHelper;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -30,14 +31,16 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $attributes = request()->validate([
+        //dd($request->all());
+        $attributes = $request->validate([
             'name' => 'required',
             'type' => 'required',
             'default_price' => 'required',
+            'image' => 'required|base64_url_image'
         ]);
 
         $attributes['user_id'] = auth()->id();
-
+        $attributes['image'] = FileHelper::fromBase64($attributes['image'])->store('product_images');
         $product = Product::create($attributes);
 
         return redirect(route('products.show', ['product' => $product]));

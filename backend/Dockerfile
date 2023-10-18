@@ -68,5 +68,8 @@ COPY . .
 RUN composer install --no-dev
 RUN chown -R nobody:nobody /var/www/html/storage
 
+# Creating Storage Link
+RUN php artisan storage:link
+
 EXPOSE 80
 CMD ["supervisord", "-c", "/etc/supervisor.d/supervisord.ini"]
