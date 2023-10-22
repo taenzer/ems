@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use App\Http\Resources\EventCollection;
 
 class ApiEventController extends Controller
 {
@@ -14,9 +15,16 @@ class ApiEventController extends Controller
      */
     public function index()
     {
-        return Event::select(['id', 'name', 'date', 'time'])
-            ->where('user_id', auth()->user()->id)->get();
+        $query = Event::select(['id', 'name', 'date', 'time'])
+            ->where('user_id', auth()->user()->id)->where('active', true);
+
+        if (request()->has('withProducts')) {
+            return new EventCollection($query->with("products")->get());
+        }
+
+        return $query->get();
     }
+
 
     /**
      * Store a newly created resource in storage.
