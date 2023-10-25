@@ -3,6 +3,8 @@ kind: pipeline
 name: default
 
 trigger:
+  event:
+    - push
   branch:
     - main
 
