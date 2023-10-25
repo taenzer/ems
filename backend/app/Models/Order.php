@@ -9,6 +9,12 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['event_id','gateway', 'total','created_at'];
+
+    public function setCreatedAttribute($value){
+        $this->attributes['created_at'] = $value;
+    }
+
     public function items(){
         return $this->hasMany(OrderItem::class);
     }

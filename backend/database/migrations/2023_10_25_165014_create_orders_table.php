@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("event_id")->constrained()->restrictOnDelete()->nullable();
+            $table->integer("event_id")->nullable();
             $table->double("total");
             $table->text("gateway");
             $table->timestamps();

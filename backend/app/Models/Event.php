@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Order;
 
 class Event extends Model
 {
@@ -41,5 +42,9 @@ class Event extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class)->as("product_data")->withPivot(['price', 'prio'])->withTimestamps();
+    }
+
+    public function orders(){
+        return $this->hasMany(Order::class);
     }
 }
