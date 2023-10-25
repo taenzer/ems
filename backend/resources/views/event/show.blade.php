@@ -138,6 +138,51 @@
 
         </x-body-box>
 
+        <x-body-box>
+            <h3 class="mb-2 font-semibold">Verkäufe</h3>
+
+            @if ($orders->isNotEmpty())
+                <div class="flex-col flex gap-2">
+                    @foreach ($orders as $order)
+                    <div class="bg-slate-50 p-4 rounded-sm" x-data="{expanded: false}" @click="expanded = !expanded">
+                        <div class=" justify-between flex items-center cursor-pointer">
+                            <div class="flex gap-4 items-center">
+                                <p class="font-semibold text-lg">#{{ $order->id }}</p>
+                                <div>
+                                    <p class="text-xs">{{ $order->created_at }}</p>
+                                    <p><strong>{{ $order->items->count() }}</strong> Positionen</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <span style="font-size: 0.6rem;" class="bg-gray-200  text-gray-600 px-2 py-1 rounded-lg leading-none uppercase font-bold">{{$order->gateway }}</span>
+                                <span>@money($order->total)</span>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200 border-solid mt-4 pt-2" x-show="expanded">
+                            @foreach ($order->items as $item)
+                                <div class="flex justify-between items-center gap-4 p-2">
+                                 <span>{{$item->quantity}}x  Unbekanntes Produkt (je @money($item->price))</span>
+                                 <span>@money($item->itemTotal)</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endforeach
+                
+                
+                </div>
+                <div class="mt-4">{{ $orders->links() }} </div>
+                
+                
+            @else
+                <div class="flex flex-col justify-center items-center p-6 gap-2 bg-slate-50">
+                    <p>Es wurden noch keine Produkte verkauft</p>
+                </div>
+
+            @endif
+
+        </x-body-box>
+
     </x-body>
 
 

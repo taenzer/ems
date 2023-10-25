@@ -54,7 +54,8 @@ class EventController extends Controller
         return view('event.show', [
             'event' => $event,
             'products' => $prods,
-            'product_sets' => $prods->sortBy("type")->groupBy("type")
+            'product_sets' => $prods->sortBy("type")->groupBy("type"),
+            'orders' => $event->orders()->orderBy('created_at', 'desc')->with('items')->paginate(5),
         ]);
     }
 
