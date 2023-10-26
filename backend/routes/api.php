@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ApiEventController;
 use App\Http\Controllers\Api\ApiOrderController;
+use App\Http\Controllers\Api\ApiProductImageController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -32,6 +33,8 @@ Route::middleware('auth:sanctum')->get('/test', function () {
 });
 
 Route::middleware('auth:sanctum')->post('/orders', [ApiOrderController::class, 'store']);
+
+Route::middleware('auth:sanctum')->get('/product-images', [ApiProductImageController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('events', ApiEventController::class);
