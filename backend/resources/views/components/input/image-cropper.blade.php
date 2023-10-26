@@ -5,7 +5,8 @@
 
 
 <div x-data="imageCropAndUpload(@js($src), @js($aspect_ratio))" {{ $attributes }} >
-    <x-input name="{{ $name }}" label="{{ $label }}" type="file" accept="image/*" @change.prevent="fileChosen" />
+    <x-input name="{{ $name }}" label="{{ $label }}" type="file" accept="image/*" @change.prevent="fileChosen" hint="Bitte keine zu großen Bilder auswählen, da sie beim Upload noch nicht runterskaliert werden (können)."/>
+   
     <div class="preview-cropped" style="aspect-ratio: {{ $aspect_ratio }}; width: 100%;">
         <x-spinner x-show="loading"></x-spinner>
         <img :src="preview" x-show="imageUrl" class="w-full h-full">
