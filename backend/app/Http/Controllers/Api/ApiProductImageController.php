@@ -16,7 +16,7 @@ class ApiProductImageController extends Controller
             $query->where('active', 1);
         })->get()->pluck("image");
 
-        $zip_file = 'product-images.zip';
+        $zip_file = storage_path('product-images.zip');
 
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
