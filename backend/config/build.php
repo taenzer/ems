@@ -2,5 +2,5 @@
 
 return [
     'nr' => env('BUILD_NR', '-'),
-    'date' => env('BUILD_DATE', '-'),
+    'date' => gmdate("d.m.Y H:i:s", env('BUILD_DATE', time()))." Uhr",
 ];

@@ -15,7 +15,7 @@ services:
     environment:
       # Laravel
       - BUILD_NR=0
-      - BUILD_DATE=0
+      - BUILD_DATE=1698271214
       - APP_NAME=EMS
       - APP_ENV=local
       - APP_KEY=base64:xIa5+MnLI4DGnKXiNI6SKeGqATsoaBqOkx4iIIOhpdA=

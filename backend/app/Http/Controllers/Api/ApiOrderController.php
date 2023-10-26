@@ -40,6 +40,7 @@ class ApiOrderController extends Controller
             "*.items" => "required|array",
             "*.items.*.product_id" => "required_without:*.items.*.productId",
             "*.items.*.productId" => "required_without:*.items.*.product_id",
+            "*.items.*.name" => "required_with:*.items.*|string",
             "*.items.*.price" => "required_with:*.items.*|numeric",
             "*.items.*.quantity" => "required_with:*.items.*|integer",
             "*.items.*.itemTotal" => "required_with:*.items.*|numeric",
