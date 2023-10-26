@@ -59,7 +59,7 @@ class ApiOrderController extends Controller
                 OrderItem::create($item_data);
             }
         }
-        return $order;
+        response()->json([], 200);
     }
 
     /**
