@@ -26,6 +26,9 @@ class ApiProductImageController extends Controller
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
         foreach ($images as $image_path) {
+            if(!isset($image_path)){
+                continue;
+            }
            $zip->addFile(storage_path("app/public/$image_path"), basename($image_path));
         }
         
