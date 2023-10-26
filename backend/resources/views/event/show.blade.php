@@ -161,7 +161,7 @@
                         <div class="border-t border-gray-200 border-solid mt-4 pt-2" x-show="expanded">
                             @foreach ($order->items as $item)
                                 <div class="flex justify-between items-center gap-4 p-2">
-                                 <span>{{$item->quantity}}x  Unbekanntes Produkt (je @money($item->price))</span>
+                                 <span>{{$item->quantity}}x  {{ $item->name }} (je @money($item->price))</span>
                                  <span>@money($item->itemTotal)</span>
                                 </div>
                             @endforeach
