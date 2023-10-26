@@ -16,6 +16,10 @@ class ApiProductImageController extends Controller
             $query->where('active', 1);
         })->get()->pluck("image");
 
+        if($images->isEmpty()){
+            return response()->json(['message' => 'No images available for download!'], 404);
+        }
+
         $zip_file = storage_path('product-images.zip');
 
         $zip = new \ZipArchive();
