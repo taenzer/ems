@@ -8,7 +8,7 @@
                 @formdata="updateFormData" @submit="prevS">
                 @csrf
                 <div class="flex gap-4">
-                    <x-input.image-cropper name="image" label="Produktbild" @update="imageString = $event.detail" class="basis-96 bg-gray-100 p-4 rounded-sm" style="max-width: 400px;" />
+                    <x-input.image-cropper name="image" label="Produktbild" @update="imageString = $event.detail" aspect_ratio="1.27" class="basis-96 bg-gray-100 p-4 rounded-sm" style="max-width: 400px;" />
                     <div class="grow pt-4">
                         <x-input name=" name" label="Produktbezeichnung" />
                         <x-select name="type" label="Produktkategorie" placeholder="-- Bitte auswählen --">
