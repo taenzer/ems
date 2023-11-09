@@ -20,8 +20,9 @@ class OrderFactory extends Factory
     {
         return [
             "event_id" => Event::factory()->create(),
-            "total" => $this->faker->randomFloat(2),
-            "gateway" => array_rand(array("bar", "member", "card"))
+            "total" => $this->faker->randomFloat(2, -10, 200),
+            "gateway" => array_rand(array("bar" => "bar", "member" => "member", "card" => "card")),
+            "created_at" => $this->faker->date(),
         ];
     }
 }

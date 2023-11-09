@@ -21,26 +21,31 @@ class DatabaseSeeder extends Seeder
 
 
         $user = \App\Models\User::factory()->create([
-             'name' => 'Moritz',
-             'email' => 'admin@der-taenzer.net',
-             'password' => '$2y$10$bYhzpsczfNrhE6/Pt7pdKOnyLF6e15WAmXSkPIlYOJ3P7bdw/YO3u'
-         ]);
+            'name' => 'Moritz',
+            'email' => 'admin@der-taenzer.net',
+            'password' => '$2y$10$bYhzpsczfNrhE6/Pt7pdKOnyLF6e15WAmXSkPIlYOJ3P7bdw/YO3u'
+        ]);
 
 
         Product::factory(10)->create();
 
 
-         Event::factory(3)->create([
-             "user_id" => $user->id,
-         ])->each(function ($event){
-             Order::factory(100)->create([
-                 "event_id" => $event->id,
-             ])->each(function($order){
-                OrderItem::factory(4)->create([
+        Event::factory(2)->create([
+            "user_id" => $user->id,
+        ])->each(function ($event) {
+            Order::factory(random_int(100, 300))->create([
+                "event_id" => $event->id,
+            ])->each(function ($order) {
+                $items = OrderItem::factory(random_int(1, 5))->create([
                     "order_id" => $order->id
                 ]);
-             });
-         });
-
+                $total = 0;
+                foreach ($items as $item) {
+                    $total += $item->itemTotal;
+                }
+                $order->total = $total;
+                $order->update();
+            });
+        });
     }
 }
