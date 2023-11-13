@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+
+    public function generateReport(Request $request, Event $event){
+        $attributes = $request->validate([
+            "report-type" => "required|String",
+            "gateways" => "nullable|Array"
+        ]);
+
+
+        $orders = $event->orders()->whereIn("gateway", $attributes["gateways"])->orderBy("created_at", "ASC")->get();
+        
+    }
     /**
      * Display a listing of the resource.
      */

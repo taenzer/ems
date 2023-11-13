@@ -139,7 +139,11 @@
         </x-body-box>
 
         <x-body-box>
-            <h3 class="mb-2 font-semibold">Verkäufe</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="mb-2 font-semibold">Verkäufe</h3>
+                <x-secondary-button x-data="{}" x-on:click.prevent="$dispatch('open-modal', 'generate-report');">Bericht</x-secondary-button>
+            </div>
+            
 
             @if ($orders->isNotEmpty())
                 <div class="flex-col flex gap-2">
@@ -180,7 +184,31 @@
                 </div>
 
             @endif
+            <x-modal name="generate-report">
+                <div class="p-6">
+                    <form action="{{ route("events.report.create", ["event" => $event ]) }}" method="POST">
+                        @csrf
+                        @method("post")
+                        <h2 class="font-semibold mb-2 text-lg">Veranstaltungsbericht erstellen</h2>
+                        <x-select name="report-type" label="Art des Berichts">
+                            <option value="sales">Verkaufsbericht</option>
+                        </x-select>
+                        <div class="mb-6">
+                            <p  class="block mb-2  uppercase font-bold text-xs text-gray-700" >
+                                Gateways einschließen
+                            </p>
+                            <div class="flex items-center gap-4">
+                                @foreach ($event->saleGateways() as $gw)
+                                    <x-input.checkbox name="gateways[]" value="{{ $gw }}"><span class="uppercase">{{ $gw }}</span></x-input.checkbox>
+                                @endforeach
+                            </div>
+                        </div>
+                        <x-primary-button>Bericht erstellen</x-primary-button>
+                        <x-secondary-button x-on:click="$dispatch('close')">Abbrechen</x-secondary-button>
+                    </form>
+                </div>
 
+            </x-modal>
         </x-body-box>
 
     </x-body>
