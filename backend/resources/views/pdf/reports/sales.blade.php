@@ -1,3 +1,4 @@
+
 <div class="vinfo">
     <h1>Verkaufsbericht</h1>
     <p><strong>Veranstaltung:</strong> {{ $event->name }} ({{ $event->datestring() }})</p>
@@ -12,9 +13,16 @@
             <tr>
                 <td class="total grow">
                     @if (!empty($id))
-                        Verkaufsgruppe #{{ $id }}
+                    @php
+                        $prod = App\Models\Product::find($id);
+                    @endphp
+                        @if(isset($prod))
+                            {{ $prod->name }}
+                        @else
+                            <em>Unbekanntes Produkt</em>
+                        @endif
                     @else
-                        Keiner Verkaufsgruppe angehörig
+                        Verschiedenes
                     @endif
                 </td>
                 <td class="right tableright shrink"><span class="stattitle">Summe Anzahl:</span><br><span
