@@ -26,8 +26,8 @@ class EventController extends Controller
                 ->whereHas('order', function($q) use($attributes) {
                     $q->whereIn("gateway", $attributes["gateways"]); // Only Items of Orders with the given gateway
                 })
-                ->get()
-                ->groupBy('product_id')
+                ->get();
+        $orderItems = $items->groupBy('product_id')
                 ->map(function($i){ 
                     return array(
                         "totalQuantity" => $i->sum("quantity"),
@@ -45,8 +45,8 @@ class EventController extends Controller
                 /* Never Change a running System... not shure how it works, but it works! */
 
         
-        $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $items));
-        return $pdf->stream();
+        $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $orderItems, "event" => $event, "gateways" => $attributes["gateways"], "eventTotal" => $items->sum("itemTotal"), "eventQty" => $items->sum("quantity")));
+        return $pdf->download("report.pdf");
     }
     /**
      * Display a listing of the resource.
