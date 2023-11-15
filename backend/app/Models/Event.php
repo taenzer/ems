@@ -29,6 +29,10 @@ class Event extends Model
         return "TODO";
     }
 
+    public function saleGateways(){
+        return $this->orders->pluck("gateway")->unique();
+    }
+
     public function dateString()
     {
         return Carbon::parse($this->date)->format("d.m.Y");
