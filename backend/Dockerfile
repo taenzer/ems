@@ -35,7 +35,7 @@ RUN apk add --no-cache php82 \
     php82-tokenizer \
     php82-pecl-redis
 
-RUN ln -s /usr/bin/php82 /usr/bin/php
+RUN ln -sf /usr/bin/php82 /usr/bin/php
 
 # Installing composer
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
