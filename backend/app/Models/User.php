@@ -23,6 +23,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function sharedEvents()
+    {
+        return $this->belongsToMany(Event::class, 'shares', 'shared_to');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

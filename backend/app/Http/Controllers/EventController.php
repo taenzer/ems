@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\OrderItem;
+use App\Models\Share;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -53,8 +54,9 @@ class EventController extends Controller
      */
     public function index()
     {
+        $shares = auth()->user()->sharedEvents;
         return view('event.index', [
-            'events' => Event::where('user_id', auth()->user()->id)->get()
+            'events' => Event::where('user_id', auth()->user()->id)->get()->merge($shares)->sortByDesc('date'),
         ]);
     }
 
@@ -90,15 +92,18 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $prods = $event->products()->orderByPivot("prio", "desc")->get();
 
+        // dd(request()->attributes->get("permission"));
+        $prods = $event->products()->orderByPivot("prio", "desc")->get();
         return view('event.show', [
             'event' => $event,
             'products' => $prods,
             'product_sets' => $prods->sortBy("type")->groupBy("type"),
             'orders' => $event->orders()->orderBy('created_at', 'desc')->with('items')->paginate(5),
+            'permission' => 2
         ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.
