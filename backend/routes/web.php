@@ -4,6 +4,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventProductLinkController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShareController;
 use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,10 @@ Route::middleware('auth')->group(function () {
     Route::post('events/{event}/products/add', [EventProductLinkController::class, 'store'])->name("events.products.store");
     Route::patch('events/{event}/products/', [EventProductLinkController::class, 'update'])->name("events.products.update");
     Route::delete('events/{event}/products/', [EventProductLinkController::class, 'destroy'])->name("events.products.destroy");
+
+    Route::get('events/{event}/shares', [ShareController::class, 'index'])->name("events.shares.index");
+    Route::post('events/{event}/shares/store', [ShareController::class, 'store'])->name("events.shares.store");
+    Route::delete('events/{event}/shares/{share}/destroy', [ShareController::class, 'destroy'])->name("events.shares.destroy");
 });
 
 

@@ -18,6 +18,17 @@
                     @method("PUT")
                     <x-secondary-button type="submit">{{ $event->active ? 'Deaktivieren' : 'Aktivieren' }}</x-secondary-button>
                 </form>
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <x-secondary-button><x-icon name="more"></x-icon></x-secondary-button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <x-dropdown-link href="{{ route('events.shares.index', ['event' => $event]) }}">
+                            Freigabe verwalten
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
             </x-slot>
         </x-header>
     </x-slot>
