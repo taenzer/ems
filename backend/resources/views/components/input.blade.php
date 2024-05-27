@@ -1,14 +1,18 @@
-@props(['name', 'label', 'type' => 'text', 'hint' => ''])
+@props(['name', 'label' => '', 'type' => 'text', 'hint' => '', 'placeholder' => ''])
 <div class="mb-6">
-    <label 
-        class="block mb-2  uppercase font-bold text-xs text-gray-700" 
-        for="{{ $name }}">
-        {{ $label }}
-    </label>
+
+    @if($label !== "")     
+        <label 
+            class="block mb-2  uppercase font-bold text-xs text-gray-700" 
+            for="{{ $name }}">
+            {{ $label }}
+        </label>
+    @endif
 
     <input 
         class="border border-gray-400 p-2 w-full rounded-md"
         type="{{ $type }}"
+        placeholder="{{ $placeholder }}"
         name="{{ $name }}"
         id="{{ $name }}"
         {{ $attributes(['value' => old($name)]) }}
