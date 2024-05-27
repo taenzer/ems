@@ -33,4 +33,4 @@ steps:
   - name: Refresh Docker Stack
     image: plugins/webhook
     settings:
-      urls: http://manager01.der-taenzer.net:9000/api/stacks/webhooks/543292b4-54cb-40e0-94f8-15cb8df825e6?BUILD_NR=${DRONE_BUILD_NUMBER}&BUILD_DATE=${DRONE_BUILD_CREATED}
+      urls: https://docker.der-taenzer.net/api/stacks/webhooks/40936ba1-c221-4307-86e8-5984e8e47c1d?BUILD_NR=${DRONE_BUILD_NUMBER}&BUILD_DATE=${DRONE_BUILD_CREATED}
