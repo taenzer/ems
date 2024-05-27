@@ -43,8 +43,8 @@ RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN rm -rf composer-setup.php
 
 # Configure supervisor
-RUN mkdir -p /etc/supervisor.d/
-COPY .docker/supervisord.ini /etc/supervisor.d/supervisord.ini
+# RUN mkdir -p /etc/supervisor.d/
+# COPY .docker/supervisord.ini /etc/supervisor.d/supervisord.ini
 
 # Configure PHP
 RUN mkdir -p /run/php/
