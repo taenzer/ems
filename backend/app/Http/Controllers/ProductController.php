@@ -7,6 +7,7 @@ use App\Helpers\File\FileHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+
 class ProductController extends Controller
 {
     /**
@@ -79,12 +80,14 @@ class ProductController extends Controller
             'image' => 'required|base64_url_image'
         ]);
         
-        if(Storage::exists($product->image))
+        if(isset($product->image) && Storage::exists($product->image))
         {
             Storage::delete($product->image);
         }
 
         $attributes['image'] = FileHelper::fromBase64($attributes['image'])->store('product_images');
+        
+        
         $product->update($attributes);
         return redirect(route('products.show', ['product' => $product]))->with('success', 'Produkt aktualisiert');
     }

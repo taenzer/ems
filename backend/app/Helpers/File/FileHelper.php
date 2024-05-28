@@ -5,13 +5,16 @@ namespace App\Helpers\File;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Intervention\Image\Laravel\Facades\Image;
 
 class FileHelper
 {
     public static function fromBase64(string $base64File): UploadedFile
     {
         // Get file data base64 string
-        $fileData = base64_decode(Arr::last(explode(',', $base64File)));
+        $image = Image::read($base64File);
+        $image->scaleDown(width: 300);
+        $fileData = base64_decode(Arr::last(explode(',', $image->toPng()->toDataUri())));
 
         // Create temp file and get its absolute path
         $tempFile = tmpfile();
@@ -37,5 +40,10 @@ class FileHelper
 
         // return UploadedFile object
         return $file;
+    }
+
+    public static function scaleDownImage($path){
+        
+        
     }
 }
