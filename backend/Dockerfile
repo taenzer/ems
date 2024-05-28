@@ -33,7 +33,8 @@ RUN apk add --no-cache php82 \
     php82-pdo_mysql \
     php82-pdo_sqlite \
     php82-tokenizer \
-    php82-pecl-redis
+    php82-pecl-redis \
+    php82-gd
 
 RUN ln -sf /usr/bin/php82 /usr/bin/php
 
