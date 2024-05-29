@@ -1,5 +1,5 @@
-@props(['name', 'label' => '', 'type' => 'text', 'hint' => '', 'placeholder' => '', 'hidden' => false])
-<div class="mb-6 {{ $hidden ? 'hidden' : '' }}">
+@props(['name', 'label' => '', 'type' => 'text', 'hint' => '', 'placeholder' => '', 'hidden' => false, "class" => "mb-6"])
+<div class="{{ $class }} {{ $hidden ? 'hidden' : '' }}">
 
     @if($label !== "")     
         <label 
