@@ -4,33 +4,68 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Event;
-use App\Models\Ticket;
+use App\Models\TicketProduct;
+use App\Models\TicketDesign;
+use App\Models\TicketPrice;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('ticket_designs', function (Blueprint $table) {
             $table->id();
-            $table->string("title")->default("Online Ticket");
-            $table->string("secret");
+            $table->string('name');
+            $table->text('html');
+        });
+        Schema::create('ticket_products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->default('Online Ticket');
+            $table->integer('tixAvailable')->nullable();
+            $table
+                ->foreignIdFor(TicketDesign::class)
+                ->constrained()
+                ->restrict();
             $table->timestamps();
         });
         Schema::create('ticket_permits', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Ticket::class)->constrained()->cascade();
-            $table->foreignIdFor(Event::class)->constrained()->restrict();
-            $table->datetime("checkedIn")->nullable()->default(null);
-            $table->timestamps();
+            $table
+                ->foreignIdFor(TicketProduct::class)
+                ->constrained()
+                ->cascade();
+            $table
+                ->foreignIdFor(Event::class)
+                ->constrained()
+                ->restrict();
+            $table->datetime('checkedIn')->nullable()->default(null);
         });
         Schema::create('ticket_prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Ticket::class)->constrained()->cascade();
-            $table->string("category");
-            $table->double("price");
+            $table
+                ->foreignIdFor(TicketProduct::class)
+                ->constrained()
+                ->cascade();
+            $table->string('category');
+            $table->double('price');
+        });
+
+        Schema::create('tickets', function (Blueprint $table) {
+            $table->id();
+            $table->string('owner')->nullable();
+            $table
+                ->foreignIdFor(TicketProduct::class)
+                ->constrained()
+                ->cascade();
+            $table
+                ->foreignIdFor(TicketPrice::class)
+                ->constrained()
+                ->restrict();
+            $table->integer('quantity');
+            $table->double('total');
+            $table->string('secret');
+            $table->timestamps();
         });
     }
 

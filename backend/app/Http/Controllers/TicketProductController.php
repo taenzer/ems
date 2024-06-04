@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
+use App\Models\TicketProduct;
 use Illuminate\Http\Request;
 
-class TicketController extends Controller
+class TicketProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('ticket.index');
+        return view('ticket.product.index', [
+            'products' => TicketProduct::all()
+        ]);
     }
 
     /**
@@ -20,7 +22,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        return view('ticket.product.create');
     }
 
     /**
@@ -34,15 +36,15 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(TicketProduct $ticket)
     {
-        //
+        return view('ticket.product.show');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Ticket $ticket)
+    public function edit(TicketProduct $ticket)
     {
         //
     }
@@ -50,7 +52,7 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ticket $ticket)
+    public function update(Request $request, TicketProduct $ticket)
     {
         //
     }
@@ -58,7 +60,7 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ticket $ticket)
+    public function destroy(TicketProduct $ticket)
     {
         //
     }

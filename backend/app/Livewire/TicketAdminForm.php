@@ -3,16 +3,36 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Validate; 
+use App\Models\TicketProduct;
 
 class TicketAdminForm extends Component
 {
-    public $name = "12";
-    public $tixAvailable = 0;
+    #[Validate('required')]
+    public $name;
+    // #[Validate('required')]
+    public $ticket_design_id;
+    public $tixAvailable;
     public $pricings = array();
     public $permits = array();
     
     public function save(){
-        dd("save");
+        $this->validate(); 
+        $ticket = TicketProduct::create([
+            "name" => $this->name,
+            "tixAvailable" => $this->tixAvailable,
+            "ticket_design_id" => $this->ticket_design_id
+        ]);
+
+        foreach($this->pricings as $pricing){
+            $ticket->prices()->create($pricing);
+        }
+
+        foreach($this->permits as $permit){
+            $ticket->permits()->create(["event_id" => $permit->id]);
+        }
+
+        return redirect()->route("tickets.products.show", $ticket->id);
     }
 
     public function mount(){
