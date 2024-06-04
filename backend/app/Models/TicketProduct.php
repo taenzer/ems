@@ -22,7 +22,11 @@ class TicketProduct extends Model
         return $this->hasMany(TicketPermit::class);
     }
 
+    public function permittedEvents(){
+        return $this->belongsToMany(Event::class, 'ticket_permits');
+    }
+
     public function design(){
-        return $this->belongsTo(TicketDesign::class);
+        return $this->belongsTo(TicketDesign::class, 'ticket_design_id');
     }
 }

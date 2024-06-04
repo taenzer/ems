@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/tickets/products/', [TicketProductController::class, 'index'])->name('tickets.products.index');
     Route::get('/tickets/products/create', [TicketProductController::class, 'create'])->name('tickets.products.create');
     Route::get('/tickets/products/{product}', [TicketProductController::class, 'show'])->name('tickets.products.show');
+    Route::get('/tickets/products/{product}/edit', [TicketProductController::class, 'edit'])->name('tickets.products.edit');
 
 });
 

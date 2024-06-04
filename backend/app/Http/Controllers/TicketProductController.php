@@ -36,17 +36,17 @@ class TicketProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TicketProduct $ticket)
+    public function show(TicketProduct $product)
     {
-        return view('ticket.product.show');
+        return view('ticket.product.show', ["product" => $product]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TicketProduct $ticket)
+    public function edit(TicketProduct $product)
     {
-        //
+        return view('ticket.product.edit', ["product" => $product]);
     }
 
     /**

@@ -15,6 +15,9 @@ class TicketAdminForm extends Component
     public $tixAvailable;
     public $pricings = array();
     public $permits = array();
+    public $exists = false;
+    public $product;
+    public $editable = false;
     
     public function save(){
         $this->validate(); 
@@ -35,7 +38,20 @@ class TicketAdminForm extends Component
         return redirect()->route("tickets.products.show", $ticket->id);
     }
 
-    public function mount(){
+    public function mount($product = null){
+
+        if(isset($product)){
+            $this->name = $product->name;
+            $this->tixAvailable = $product->tixAvailable;
+            $this->ticket_design_id = $product->ticket_design_id;
+            $this->pricings = $product->prices->toArray();
+            $this->permits = $product->permittedEvents->mapWithKeys(function($event){
+                return [$event->id => $event];
+            });
+            $this->exists = true;
+            $this->product = $product;
+        }
+        
 
     }
 

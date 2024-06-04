@@ -4,7 +4,7 @@
     </x-slot>
     <x-body>
         <x-body-box>
-            <livewire:ticket-admin-form />
+            <livewire:ticket-admin-form :editable="true" />
         </x-body-box>
 
     </x-body>
