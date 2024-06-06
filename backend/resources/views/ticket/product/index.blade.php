@@ -5,6 +5,11 @@
                 <a href="{{ route('tickets.products.create') }}"><x-primary-button>Neues Ticket
                         Produkt</x-primary-button></a>
             </x-slot>
+            <x-slot name="beforeHeading">
+                <a href="{{ route('tickets.index') }}" class="opacity-50">
+                    <x-icon name="chevron-left" />
+                </a>
+    </x-slot>
         </x-header>
     </x-slot>
     <x-body>

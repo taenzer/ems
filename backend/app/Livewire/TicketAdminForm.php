@@ -8,6 +8,9 @@ use App\Models\TicketProduct;
 
 class TicketAdminForm extends Component
 {
+
+    public TicketProduct $product;
+    
     #[Validate('required')]
     public $name;
     // #[Validate('required')]
@@ -16,57 +19,60 @@ class TicketAdminForm extends Component
     public $pricings = array();
     public $permits = array();
     public $exists = false;
-    public $product;
     public $editable = false;
     
     public function save(){
+        
         $this->validate(); 
-        $ticket = TicketProduct::create([
-            "name" => $this->name,
-            "tixAvailable" => $this->tixAvailable,
-            "ticket_design_id" => $this->ticket_design_id
-        ]);
+        $this->product->name = $this->name;
+        $this->product->tixAvailable = $this->tixAvailable;
+        $this->product->ticket_design_id = $this->ticket_design_id;
+        $this->product->save();
+
+        $this->product->prices()->whereNotIn('id', array_keys($this->pricings))->delete();
 
         foreach($this->pricings as $pricing){
-            $ticket->prices()->create($pricing);
+            $this->product->prices()->firstOrCreate($pricing);
         }
 
-        foreach($this->permits as $permit){
-            $ticket->permits()->create(["event_id" => $permit->id]);
-        }
-
-        return redirect()->route("tickets.products.show", $ticket->id);
+        return redirect()->route("tickets.products.show", $this->product->id);
     }
 
     public function mount($product = null){
 
         if(isset($product)){
+            $this->product = $product;
             $this->name = $product->name;
             $this->tixAvailable = $product->tixAvailable;
             $this->ticket_design_id = $product->ticket_design_id;
-            $this->pricings = $product->prices->toArray();
-            $this->permits = $product->permittedEvents->mapWithKeys(function($event){
-                return [$event->id => $event];
+            $this->pricings = $product->prices->mapWithKeys(function($pricing){
+                return [$pricing->id => $pricing];
+            })->toArray();
+            $this->permits = $product->permits()->with("event")->get()->mapWithKeys(function($permit){
+                return [$permit->id => $permit];
             });
-            $this->exists = true;
-            $this->product = $product;
+
+        }else{
+            $this->product = new TicketProduct();
         }
         
 
     }
 
     public function addPermit(\App\Models\Event $event){
-        $this->permits[$event->id] = $event;
+        $permit = $this->product->permits()->firstOrCreate(["event_id" => $event->id]);
+        $this->permits[$permit->id] = $permit;
     }
     
     public function removePermit($index){
+        $this->permits[$index]->delete();
         unset($this->permits[$index]);
     }
     public function removePricing($index){
         unset($this->pricings[$index]);  
     }
     public function addPricing($category = "", $price = 0){
-        $this->pricings[uniqid()] = array("category" => $category, "price" => $price);
+        $this->pricings["new-".uniqid()] = array("category" => $category, "price" => $price);
     }
     public function render()
     {

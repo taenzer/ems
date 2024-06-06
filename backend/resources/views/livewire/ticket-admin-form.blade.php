@@ -14,13 +14,13 @@
         </x-body-section>
 
         <x-body-section title="Preiskategorien" class="pb-4">
-            @foreach ($pricings as $key => $pricing)
+            @foreach ($pricings as $id => $pricing)
                 <div class="mb-4 flex gap-2">
-                    <x-input placeholder="Kategorie" name="category" :data-index="$key"
-                        wire:model="pricings.{{ $key }}.category" class="grow" :disabled="!$editable" required />
-                    <x-input type="number" placeholder="0,00" name="price" class="mb-0" :disabled="!$editable" wire:model="pricings.{{ $key }}.price" required />
+                    <x-input placeholder="Kategorie" name="category"
+                        wire:model="pricings.{{ $id }}.category" class="grow" :disabled="!$editable"  required />
+                    <x-input type="number" placeholder="0,00" name="price" class="mb-0" :disabled="!$editable" wire:model="pricings.{{ $id }}.price" required />
                     @if($editable)
-                        <x-danger-button wire:click="removePricing('{{ $key }}')"
+                        <x-danger-button wire:click="removePricing('{{ $id }}')"
                             wire:confirm="Möchtest du die Preiskategorie wirklich löschen?" type="button">
                             <x-icon name="delete" color="white" />
                         </x-danger-button>
@@ -39,7 +39,7 @@
         <x-body-section title="Zutrittsberechtigungen" class="pb-4">
             @foreach ($permits as $permit)
                 <div class="mb-4 flex justify-between items-center rounded bg-slate-100 p-4">
-                    <p>{{ $permit->name }} ({{ $permit->date }})</p>
+                    <p>{{ $permit->event->name }} ({{ $permit->event->date }})</p>
                     @if($editable)
                         <x-danger-button wire:click="removePermit({{ $permit->id }})"
                             wire:confirm="Möchtest du die Zutrittsberechtigung wirklich löschen?" type="button">
@@ -76,11 +76,7 @@
 
         @if($editable)
             <x-primary-button>
-                @if($exists)
-                    Ticket aktualisieren
-                @else
-                    Ticket erstellen
-                @endif
+                Speichern
             </x-primary-button>
         @endif
 
