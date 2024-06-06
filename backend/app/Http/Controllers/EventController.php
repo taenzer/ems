@@ -100,7 +100,8 @@ class EventController extends Controller
             'products' => $prods,
             'product_sets' => $prods->sortBy("type")->groupBy("type"),
             'orders' => $event->orders()->orderBy('created_at', 'desc')->with('items')->paginate(5),
-            'permission' => 2
+            'permission' => 2,
+            'ticketProducts' => $event->ticketProducts,
         ]);
     }
 

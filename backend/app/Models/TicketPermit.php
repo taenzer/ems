@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Event;
+use App\Models\TicketProduct;
 
 class TicketPermit extends Model
 {
@@ -14,5 +15,9 @@ class TicketPermit extends Model
 
     public function event(){
         return $this->belongsTo(Event::class);
+    }
+
+    public function ticketProduct(){
+        return $this->belongsTo(TicketProduct::class);
     }
 }
