@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('events/{event}/shares/{share}/destroy', [ShareController::class, 'destroy'])->name("events.shares.destroy")->middleware(EventOwnerOrShareOnly::class);
 
     Route::get('tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
     
     Route::get('/tickets/products/', [TicketProductController::class, 'index'])->name('tickets.products.index');
     Route::get('/tickets/products/create', [TicketProductController::class, 'create'])->name('tickets.products.create');

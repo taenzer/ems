@@ -7,6 +7,8 @@ use App\Models\Event;
 use App\Models\TicketProduct;
 use App\Models\TicketDesign;
 use App\Models\TicketPrice;
+use App\Models\TicketOrder;
+use App\Models\User;
 
 return new class extends Migration {
     /**
@@ -51,9 +53,26 @@ return new class extends Migration {
             $table->double('price');
         });
 
+        Schema::create('ticket_orders', function (Blueprint $table) {
+            $table->id();
+            $table->string('gateway');
+            $table->integer('quantity');
+            $table->double('total');
+            $table->string('meta')->nullable();
+            $table
+                ->foreignIdFor(User::class)
+                ->nullable()
+                ->constrained()
+                ->noAction();
+            $table->timestamps();
+        });
+
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->string('owner')->nullable();
+            $table
+                ->foreignIdFor(TicketOrder::class)
+                ->constrained()
+                ->cascade();
             $table
                 ->foreignIdFor(TicketProduct::class)
                 ->constrained()
@@ -62,8 +81,6 @@ return new class extends Migration {
                 ->foreignIdFor(TicketPrice::class)
                 ->constrained()
                 ->restrict();
-            $table->integer('quantity');
-            $table->double('total');
             $table->string('secret');
             $table->timestamps();
         });

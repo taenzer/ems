@@ -4,7 +4,7 @@
         <x-body-section title="Allgemeine Ticketoptionen">
             <x-input label="Ticket Name" name="name" wire:model="name" required :disabled="!$editable" />
             <x-input type="number" label="Anzahl verfügbar" name="tixAvailable" wire:model="tixAvailable" required :disabled="!$editable" />
-            <x-select name="ticket_design_id" label="Ticket Design" wire:model="ticket_design_id" :disabled="!$editable">
+            <x-select name="ticket_design_id" label="Ticket Design" wire:model="ticket_design_id" :disabled="!$editable" placeholder="Design auswählen">
                 @forelse (App\Models\TicketDesign::all() as $design)
                     <option value="{{ $design->id }}">{{ $design->name }}</option>
                 @empty
