@@ -10,7 +10,7 @@
 
 
     <select 
-        class="border border-gray-400 p-2 w-full rounded-md"
+        class="border border-gray-400 p-2 w-full rounded-md disabled:cursor-not-allowed disabled:text-gray-500"
 
         name="{{ $name }}"
         id="{{ $name }}"

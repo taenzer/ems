@@ -10,7 +10,7 @@
     @endif
 
     <input 
-        class="border border-gray-400 p-2 w-full rounded-md "
+        class="border border-gray-400 p-2 w-full rounded-md disabled:text-gray-500 disabled:cursor-not-allowed"
         type="{{ $type }}"
         placeholder="{{ $placeholder }}"
         name="{{ $name }}"
