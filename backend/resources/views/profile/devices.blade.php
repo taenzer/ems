@@ -4,7 +4,18 @@
     </x-slot>
     <x-body>
         <x-body-box>
-            <h3 class="font-semibold mb-6">Geräteübersicht</h3>
+            <div class="flex justify-between items-start">
+                <h3 class="font-semibold mb-6">Geräteübersicht</h3>
+                <x-secondary-button x-data="{}" x-on:click.prevent="$dispatch('open-modal', 'new-api-token');">Neuer API Token</x-secondary-button>
+            </div>
+
+            <x-modal name="new-api-token" >
+                <div class="p-8">
+                    <livewire:a-p-i-token-generator />
+                </div>
+            </x-modal>
+            
+            
             <table class="w-full border-collapse rounded-lg overflow-hidden border-solid border-2 border-b-0 border-slate-100">
                 <thead class="font-semibold bg-slate-100">
                     <tr>
