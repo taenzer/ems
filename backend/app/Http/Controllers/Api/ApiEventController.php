@@ -25,6 +25,11 @@ class ApiEventController extends Controller
         return $query->get();
     }
 
+    public function getTicketProducts(Event $event)
+    {
+        return $event->ticketProducts()->with("prices")->with("permittedEvents")->get();
+    }
+
 
     /**
      * Store a newly created resource in storage.

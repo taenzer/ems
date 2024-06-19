@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiEventController;
 use App\Http\Controllers\Api\ApiOrderController;
 use App\Http\Controllers\Api\ApiProductImageController;
+use App\Http\Controllers\Api\ApiTicketController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -38,6 +39,11 @@ Route::middleware('auth:sanctum')->get('/product-images', [ApiProductImageContro
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('events', ApiEventController::class);
+    Route::get('events/{event}/products/tickets', [ApiEventController::class, 'getTicketProducts']);
+
+    Route::post('tickets', [ApiTicketController::class, 'createOrder']);
+    Route::post('tickets/pdf', [ApiTicketController::class, 'getTicketPdf']);
+
 
     /*     Route::put("events/{event}/status", [ApiEventController::class, 'toggleStatus'])->name("events.status.toggle");
     Route::resource('products', ProductController::class);
@@ -47,6 +53,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('events/{event}/products/', [EventProductLinkController::class, 'update'])->name("events.products.update");
     Route::delete('events/{event}/products/', [EventProductLinkController::class, 'destroy'])->name("events.products.destroy"); */
 });
+
+
 
 
 /* TODO: Refactor to own Controller? */

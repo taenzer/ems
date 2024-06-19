@@ -56,7 +56,6 @@ return new class extends Migration {
         Schema::create('ticket_orders', function (Blueprint $table) {
             $table->id();
             $table->string('gateway');
-            $table->integer('quantity');
             $table->double('total');
             $table->string('meta')->nullable();
             $table
