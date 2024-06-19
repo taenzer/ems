@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM php:8.2-fpm-alpine
 
 WORKDIR /var/www/html/
 
@@ -10,31 +10,11 @@ RUN apk add --no-cache zip unzip curl sqlite nginx supervisor
 RUN apk add bash
 RUN sed -i 's/bin\/ash/bin\/bash/g' /etc/passwd
 
-# Installing PHP
-RUN apk add --no-cache php82 \
-    php82-common \
-    php82-fpm \
-    php82-pdo \
-    php82-opcache \
-    php82-zip \
-    php82-phar \
-    php82-iconv \
-    php82-cli \
-    php82-curl \
-    php82-openssl \
-    php82-mbstring \
-    php82-tokenizer \
-    php82-fileinfo \
-    php82-json \
-    php82-xml \
-    php82-xmlwriter \
-    php82-simplexml \
-    php82-dom \
-    php82-pdo_mysql \
-    php82-pdo_sqlite \
-    php82-tokenizer \
-    php82-pecl-redis \
-    php82-gd
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN apk add php82-pecl-redis
+
+RUN install-php-extensions imagick gd pdo_sqlite pdo_mysql curl zip
 
 RUN ln -s /usr/bin/php82 /usr/bin/php
 
