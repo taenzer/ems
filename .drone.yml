@@ -1,5 +1,6 @@
 ---
 kind: pipeline
+type: docker
 name: default
 
 trigger:
@@ -17,13 +18,16 @@ steps:
       - npm run build
   - name: Create and upload Docker Image
     image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: 1
     settings:
       registry: registry.der-taenzer.net
       username:
         from_secret: REGISTRY_USER
       password:
         from_secret: REGISTRY_PASS
-
+      build_args:
+       - BUILDKIT_INLINE_CACHE=1
       repo: registry.der-taenzer.net/tnz/eventverein-api
       tags:
         - latest
