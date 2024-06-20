@@ -14,9 +14,19 @@ RUN sed -i 's/bin\/ash/bin\/bash/g' /etc/passwd
 
 RUN apk add --no-cache php82-pecl-redis
 
-RUN apk add --no-cache imagemagick-dev zlib-dev libpng-dev sqlite-dev curl-dev libzip-dev
+RUN apk add --no-cache zlib-dev libpng-dev sqlite-dev curl-dev libzip-dev
 
-RUN docker-php-ext-install imagick gd pdo_sqlite pdo_mysql curl zip
+RUN apk update && apk add --no-cache \
+    autoconf \
+    build-base \
+    imagemagick \
+    imagemagick-dev \
+    libtool \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && apk del autoconf build-base libtool
+
+RUN docker-php-ext-install gd pdo_sqlite pdo_mysql curl zip
 
 RUN ln -sf /usr/bin/php82 /usr/bin/php
 
