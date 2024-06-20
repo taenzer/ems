@@ -13,10 +13,11 @@
                 <a href="{{ route('events.edit', ['event' => $event]) }}">
                     <x-primary-button>Bearbeiten</x-primary-button>
                 </a>
-                <form action="{{ route("events.status.toggle", ["event" => $event])}}" method="POST">
-                    @csrf 
-                    @method("PUT")
-                    <x-secondary-button type="submit">{{ $event->active ? 'Deaktivieren' : 'Aktivieren' }}</x-secondary-button>
+                <form action="{{ route('events.status.toggle', ['event' => $event]) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <x-secondary-button
+                        type="submit">{{ $event->active ? 'Deaktivieren' : 'Aktivieren' }}</x-secondary-button>
                 </form>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -57,7 +58,29 @@
         </x-body-box>
         <x-body-box>
             <h3 class="mb-2 font-semibold">Tickets</h3>
-            <x-link-button link="/events/{{ $event->id }}/add/tickets">Tickets hinzufügen</x-link-button>
+            <div class="flex flex-col gap-2">
+            @forelse($ticketProducts as $ticketProduct)
+                <div class="bg-slate-100 rounded p-4 flex items-center justify-between">
+                <div>
+                    <p class="font-semibold">{{ $ticketProduct->name }}</p>
+                    <x-badge class="bg-slate-200">{{ $ticketProduct->prices()->count() }} Preiskategorien</x-badge>
+                </div>
+
+                <div class="flex gap-2">
+                    <x-icon name="shopping-cart" size="1.3"></x-icon>
+                    <x-icon name="analytics" size="1.3"></x-icon>
+                    <a href="{{ route('tickets.products.show', ['product' => $ticketProduct]) }}" title="Ticketdetails verwalten"><x-icon name="settings" size="1.3"></x-icon></a>
+                    
+                </div>
+                    
+                </div>
+            @empty
+                <div class="flex flex-col items-center justify-center gap-2 bg-slate-100 p-6">
+                    <p>Es existieren keine Tickets die den Zugang zu diesem Event ermöglichen</p>
+                    <x-link-button :link="route('tickets.products.index')">Ticket Produkte verwalten</x-link-button>
+                </div>
+            @endforelse
+            </div>
         </x-body-box>
         <x-body-box>
             <h3 class="mb-2 font-semibold">Produkte</h3>
@@ -66,18 +89,18 @@
 
                 <form action="{{ route('events.products.update', ['event' => $event]) }}" method="POST"
                     x-ref="form.events.products">
-                    <div class="flex gap-4 mb-6">
+                    <div class="mb-6 flex gap-4">
                         @csrf
                         @method('PATCH')
                         @foreach ($product_sets as $type => $prods)
-                            <x-body-section title="{{ \App\Models\Product::getTypes()[$type] }}" class="basis-2/4 grow">
+                            <x-body-section title="{{ \App\Models\Product::getTypes()[$type] }}" class="grow basis-2/4">
 
                                 <x-sortable class="flex flex-col gap-2" handle=".handle" x-data="{ count: 0, childs: Array.from($refs.wrap.children) }"
                                     x-on:prio-changed=" childs = Array.from($el.children); count++;" x-ref="wrap">
                                     @foreach ($prods as $product)
-                                        <div class="flex bg-slate-100 rounded py-2 px-4 items-center justify-between"
+                                        <div class="flex items-center justify-between rounded bg-slate-100 px-4 py-2"
                                             x-data="{ prio: childs.length - childs.indexOf($el) }" x-init="$watch('count', function(value) { prio = childs.length - childs.indexOf($el) })">
-                                            <div class="flex gap-2 items-center">
+                                            <div class="flex items-center gap-2">
                                                 <span class="handle cursor-move"><x-icon name="drag-indicator" /></span>
                                                 <span>{{ $product->name }}</span>
                                             </div>
@@ -123,7 +146,7 @@
                         @method('DELETE')
 
                         <div class="p-6">
-                            <h2 class="font-semibold mb-2 text-lg">Möchtest du die Verknüpfung wirklich löschen?</h2>
+                            <h2 class="mb-2 text-lg font-semibold">Möchtest du die Verknüpfung wirklich löschen?</h2>
                             <p class="mb-6">Das Produkt an sich sowie die Verkaufsstatistik werden dadurch nicht
                                 gelöscht.</p>
                             <x-select name="product_id" label="Ausgewähltes Produkt" x-model="selected_product">
@@ -140,7 +163,7 @@
                     </form>
                 </x-modal>
             @else
-                <div class="flex flex-col justify-center items-center p-6 gap-2 bg-slate-50">
+                <div class="flex flex-col items-center justify-center gap-2 bg-slate-100 p-6">
                     <p>Es wurden noch keine Produkte hinzugefügt</p>
                     <x-link-button :link="route('events.products.add', $event)">Produkte hinzufügen</x-link-button>
                 </div>
@@ -150,67 +173,68 @@
         </x-body-box>
 
         <x-body-box>
-            <div class="flex justify-between items-center mb-4">
+            <div class="mb-4 flex items-center justify-between">
                 <h3 class="mb-2 font-semibold">Verkäufe</h3>
-                <x-secondary-button x-data="{}" x-on:click.prevent="$dispatch('open-modal', 'generate-report');">Bericht</x-secondary-button>
+                <x-secondary-button x-data="{}"
+                    x-on:click.prevent="$dispatch('open-modal', 'generate-report');">Bericht</x-secondary-button>
             </div>
-            
+
 
             @if ($orders->isNotEmpty())
-                <div class="flex-col flex gap-2">
+                <div class="flex flex-col gap-2">
                     @foreach ($orders as $order)
-                    <div class="bg-slate-50 p-4 rounded-sm" x-data="{expanded: false}" @click="expanded = !expanded">
-                        <div class=" justify-between flex items-center cursor-pointer">
-                            <div class="flex gap-4 items-center">
-                                <p class="font-semibold text-lg">#{{ $order->id }}</p>
-                                <div>
-                                    <p class="text-xs">{{ $order->created_at }}</p>
-                                    <p><strong>{{ $order->items->count() }}</strong> Positionen</p>
+                        <div class="rounded-sm bg-slate-100 p-4" x-data="{ expanded: false }" @click="expanded = !expanded">
+                            <div class="flex cursor-pointer items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <p class="text-lg font-semibold">#{{ $order->id }}</p>
+                                    <div>
+                                        <p class="text-xs">{{ $order->created_at }}</p>
+                                        <p><strong>{{ $order->items->count() }}</strong> Positionen</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span style="font-size: 0.6rem;"
+                                        class="rounded-lg bg-gray-200 px-2 py-1 font-bold uppercase leading-none text-gray-600">{{ $order->gateway }}</span>
+                                    <span>@money($order->total)</span>
                                 </div>
                             </div>
-                            <div class="flex gap-2 items-center">
-                                <span style="font-size: 0.6rem;" class="bg-gray-200  text-gray-600 px-2 py-1 rounded-lg leading-none uppercase font-bold">{{$order->gateway }}</span>
-                                <span>@money($order->total)</span>
+                            <div class="mt-4 border-t border-solid border-gray-200 pt-2" x-show="expanded">
+                                @foreach ($order->items as $item)
+                                    <div class="flex items-center justify-between gap-4 p-2">
+                                        <span>{{ $item->quantity }}x {{ $item->name }} (je @money($item->price))</span>
+                                        <span>@money($item->itemTotal)</span>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
-                        <div class="border-t border-gray-200 border-solid mt-4 pt-2" x-show="expanded">
-                            @foreach ($order->items as $item)
-                                <div class="flex justify-between items-center gap-4 p-2">
-                                 <span>{{$item->quantity}}x  {{ $item->name }} (je @money($item->price))</span>
-                                 <span>@money($item->itemTotal)</span>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
                     @endforeach
-                
-                
+
+
                 </div>
                 <div class="mt-4">{{ $orders->links() }} </div>
-                
-                
             @else
-                <div class="flex flex-col justify-center items-center p-6 gap-2 bg-slate-50">
+                <div class="flex flex-col items-center justify-center gap-2 bg-slate-100 p-6">
                     <p>Es wurden noch keine Produkte verkauft</p>
                 </div>
 
             @endif
             <x-modal name="generate-report">
                 <div class="p-6">
-                    <form action="{{ route("events.report.create", ["event" => $event ]) }}" method="POST">
+                    <form action="{{ route('events.report.create', ['event' => $event]) }}" method="POST">
                         @csrf
-                        @method("post")
-                        <h2 class="font-semibold mb-2 text-lg">Veranstaltungsbericht erstellen</h2>
+                        @method('post')
+                        <h2 class="mb-2 text-lg font-semibold">Veranstaltungsbericht erstellen</h2>
                         <x-select name="report-type" label="Art des Berichts">
                             <option value="sales">Verkaufsbericht</option>
                         </x-select>
                         <div class="mb-6">
-                            <p  class="block mb-2  uppercase font-bold text-xs text-gray-700" >
+                            <p class="mb-2 block text-xs font-bold uppercase text-gray-700">
                                 Gateways einschließen
                             </p>
                             <div class="flex items-center gap-4">
                                 @foreach ($event->saleGateways() as $gw)
-                                    <x-input.checkbox name="gateways[]" value="{{ $gw }}"><span class="uppercase">{{ $gw }}</span></x-input.checkbox>
+                                    <x-input.checkbox name="gateways[]" value="{{ $gw }}"><span
+                                            class="uppercase">{{ $gw }}</span></x-input.checkbox>
                                 @endforeach
                             </div>
                         </div>

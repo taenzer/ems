@@ -1,0 +1,70 @@
+version: "3.8"
+services:
+  app:
+    build: ./backend/
+    container_name: backend
+    command: >-
+      sh -c "
+        apk add php82-pecl-xdebug && composer install ;\
+        cp .docker/php.ini-development /etc/php82/php.ini ;\
+        cp .docker/xdebug.ini /etc/php82/conf.d/50_xdebug.ini ;\
+        php artisan serve --host 0.0.0.0 --port 80"
+    ports:
+      - "8080:80"
+      - "5173:5173"
+    environment:
+      # Laravel
+      - BUILD_NR=0
+      - BUILD_DATE=1698271214
+      - APP_NAME=EMS
+      - APP_ENV=local
+      - APP_KEY=base64:xIa5+MnLI4DGnKXiNI6SKeGqATsoaBqOkx4iIIOhpdA=
+      - APP_DEBUG=true
+      - APP_URL=localhost
+
+      - LOG_CHANNEL=stack
+      - LOG_DEPRECATIONS_CHANNEL=${LOG_DEPRECATIONS_CHANNEL}
+      - LOG_LEVEL=debug
+
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=eventverein-api
+      - DB_USERNAME=laravel
+      - DB_PASSWORD=laravel
+    volumes:
+      - ./backend:/var/www/html:rw
+    networks:
+      - app_network
+  db:
+    # We use a mariadb image which supports both amd64 & arm64 architecture
+    image: mariadb:10.6.4-focal
+    # If you really want to use MySQL, uncomment the following line
+    #image: mysql:8.0.27
+    command: "--default-authentication-plugin=mysql_native_password"
+    container_name: mysql
+    volumes:
+      - ./database:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=eventverein-api
+      - MYSQL_ROOT_PASSWORD=laravel
+      - MYSQL_USER=laravel
+      - MYSQL_PASSWORD=laravel
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    expose:
+      - 3306
+      - 33060
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+    driver: "local"
+  cache_data:
+    driver: "local"
+
+networks:
+  app_network:
+    driver: "bridge"

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Order;
+use App\Models\TicketProduct;
+use App\Models\TicketPermit;
 
 class Event extends Model
 {
@@ -50,5 +52,9 @@ class Event extends Model
 
     public function orders(){
         return $this->hasMany(Order::class);
+    }
+
+    public function ticketProducts(){
+        return $this->hasManyThrough(TicketProduct::class, TicketPermit::class, "event_id", "id", "id", "ticket_product_id");
     }
 }

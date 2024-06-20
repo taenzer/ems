@@ -1,5 +1,5 @@
-@props(['name', 'label' => '', 'type' => 'text', 'hint' => '', 'placeholder' => '', 'hidden' => false])
-<div class="mb-6 {{ $hidden ? 'hidden' : '' }}">
+@props(['name', 'label' => '', 'type' => 'text', 'hint' => '', 'placeholder' => '', 'hidden' => false, "class" => "mb-6"])
+<div class="{{ $class }} {{ $hidden ? 'hidden' : '' }}">
 
     @if($label !== "")     
         <label 
@@ -10,7 +10,7 @@
     @endif
 
     <input 
-        class="border border-gray-400 p-2 w-full rounded-md "
+        class="border border-gray-400 p-2 w-full rounded-md disabled:text-gray-500 disabled:cursor-not-allowed"
         type="{{ $type }}"
         placeholder="{{ $placeholder }}"
         name="{{ $name }}"
