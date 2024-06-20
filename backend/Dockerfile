@@ -4,17 +4,19 @@ WORKDIR /var/www/html/
 
 # Essentials
 RUN echo "UTC" > /etc/timezone
+RUN apk update
+RUN apk upgrade
 RUN apk add --no-cache zip unzip curl sqlite nginx supervisor
 
 # Installing bash
 RUN apk add bash
 RUN sed -i 's/bin\/ash/bin\/bash/g' /etc/passwd
 
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN apk add --no-cache php82-pecl-redis
 
-RUN apk add php82-pecl-redis
+RUN apk add --no-cache imagemagick-dev zlib-dev libpng-dev sqlite-dev curl-dev libzip-dev
 
-RUN install-php-extensions imagick gd pdo_sqlite pdo_mysql curl zip
+RUN docker-php-ext-install imagick gd pdo_sqlite pdo_mysql curl zip
 
 RUN ln -sf /usr/bin/php82 /usr/bin/php
 
