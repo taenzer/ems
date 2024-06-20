@@ -41,7 +41,6 @@ return new class extends Migration {
                 ->foreignIdFor(Event::class)
                 ->constrained()
                 ->restrict();
-            $table->datetime('checkedIn')->nullable()->default(null);
         });
         Schema::create('ticket_prices', function (Blueprint $table) {
             $table->id();
