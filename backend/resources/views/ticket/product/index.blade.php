@@ -24,7 +24,6 @@
                             <span class="font-semibold" >{{ $product->name }}</span>
                             <x-badge>{{ $product->permits()->count() }} Permits</x-badge>
                             <x-badge>{{ $product->prices()->count() }} Prices</x-badge>
-                            <x-badge>{{ $product->design->name }}</x-badge>
                         </div>
                         <span style="grid-area: 1 / 3 / 2 / 4"> <x-icon name="chevron-right" /></span>
                     </div>
