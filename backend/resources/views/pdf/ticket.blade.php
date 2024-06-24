@@ -16,7 +16,6 @@
             text-align: left; 
             border: 5px solid #2b7b18; 
             height: 250px; width: 600px; 
-            background-image: url(); 
             margin: 20px 0;
         ">
 
@@ -37,11 +36,10 @@
                 style="font-size:1.3em; page-break-before: avoid; page-break-after: avoid; padding: 0 0 5px 0; margin: 0 0 5px 0;  border-bottom: 1px solid black; display: inline-block;">
                 AHG SOMMERKINO TICKET #{{ $ticket->id }}</h3>
             <p style="page-break-before: avoid; page-break-after: avoid; margin: 5px 0; ">{{ $ticket->ticketProduct->name }} - {{ $ticket->ticketPrice->category }} (@money($ticket->ticketPrice->price))</p>
-            <p style="page-break-before: avoid; page-break-after: avoid; margin: 5px 0; ">Gültig für: 
+            <p style="page-break-before: avoid; page-break-after: avoid; margin: 5px 0; background: #ececec;">Gültig für: 
             @foreach ($ticket->ticketProduct->permittedEvents as $event)
                 {{ $event->name }} ({{ $event->dateString() }}){{ $loop->last ? '' : ', ' }}
             @endforeach
-            
             </p>
 
         </div>
