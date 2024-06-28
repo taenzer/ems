@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\TicketOrder;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -20,7 +21,12 @@ class TicketController extends Controller
      */
     public function create()
     {
-        return view('ticket.create');
+        return view('ticket.order.create');
+    }
+
+    public function showOrder(TicketOrder $order)
+    {
+        return view('ticket.order.show');
     }
 
     /**
