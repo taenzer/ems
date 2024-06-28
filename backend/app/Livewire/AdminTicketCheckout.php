@@ -16,7 +16,13 @@ class AdminTicketCheckout extends Component
 
     public function getProducts()
     {
-        $this->products = Event::find($this->event)->ticketProducts;
+        if ($this->event !== "") {
+            $this->products = Event::find($this->event)->ticketProducts;
+        } else {
+            $this->products = collect();
+            $this->event = null;
+        }
+        $this->resetCart();
     }
     public function render()
     {
@@ -56,8 +62,16 @@ class AdminTicketCheckout extends Component
         }
     }
 
+    public function resetCart()
+    {
+        $this->cart = array();
+    }
+
     public function createOrder()
     {
+        if (!isset($this->cart) || empty($this->cart) || $this->calcOrderTotal() == 0) {
+            return;
+        }
         $order = new TicketOrder();
         $order->gateway = "EMS-ADMIN";
         $order->total = $this->calcOrderTotal();
@@ -75,6 +89,6 @@ class AdminTicketCheckout extends Component
                 }
             }
         }
-        return redirect(route("tickets.orders.show", ["order" => $order]));
+        return redirect(route("tickets.orders.show", ["ticketOrder" => $order]));
     }
 }
