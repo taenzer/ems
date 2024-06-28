@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\TicketOrder;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -10,7 +11,7 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function dashboard()
     {
         return view('ticket.index');
     }
@@ -20,8 +21,9 @@ class TicketController extends Controller
      */
     public function create()
     {
-        return view('ticket.create');
+        //
     }
+
 
     /**
      * Store a newly created resource in storage.

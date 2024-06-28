@@ -6,7 +6,7 @@
                         Produkt</x-primary-button></a>
             </x-slot>
             <x-slot name="beforeHeading">
-                <a href="{{ route('tickets.index') }}" class="opacity-50">
+                <a href="{{ route('tickets.dashboard') }}" class="opacity-50">
                     <x-icon name="chevron-left" />
                 </a>
     </x-slot>
