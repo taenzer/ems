@@ -45,7 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::get('tickets', [TicketController::class, 'dashboard'])->name('tickets.dashboard');
     Route::get('tickets/orders', [TicketOrderController::class, 'index'])->name('tickets.orders.index');
     Route::get('tickets/orders/create', [TicketOrderController::class, 'create'])->name('tickets.orders.create');
-    Route::get('tickets/orders/{order}', [TicketOrderController::class, 'show'])->name('tickets.orders.show');
+    Route::get('tickets/orders/{ticketOrder}', [TicketOrderController::class, 'show'])->name('tickets.orders.show');
+    Route::get('tickets/orders/{ticketOrder}/download', [TicketOrderController::class, 'downloadTickets'])->name('tickets.orders.download');
 
 
     Route::get('/tickets/products/', [TicketProductController::class, 'index'])->name('tickets.products.index');

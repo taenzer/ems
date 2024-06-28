@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TicketOrder;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TicketOrderController extends Controller
 {
@@ -12,7 +13,7 @@ class TicketOrderController extends Controller
      */
     public function index()
     {
-        return view("ticket.order.index");
+        return view("ticket.order.index", ['orders' => TicketOrder::where("user_id", auth()->user()->id)->get()]);
     }
 
     /**
@@ -36,7 +37,14 @@ class TicketOrderController extends Controller
      */
     public function show(TicketOrder $ticketOrder)
     {
-        return view("ticket.order.show");
+        return view("ticket.order.show", ["order" => $ticketOrder]);
+    }
+
+    public function downloadTickets(TicketOrder $ticketOrder)
+    {
+        $tickets = $ticketOrder->tickets()->with(["ticketPrice", "ticketProduct"])->get();
+        $pdf = Pdf::loadView('pdf.ticket', array("tickets" => $tickets));
+        return $pdf->download("ems-tickets-" . $ticketOrder->id . ".pdf");
     }
 
     /**
