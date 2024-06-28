@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
 use App\Models\TicketOrder;
 use Illuminate\Http\Request;
 
-class TicketController extends Controller
+class TicketOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function dashboard()
+    public function index()
     {
-        return view('ticket.index');
+        return view("ticket.order.index");
     }
 
     /**
@@ -21,9 +20,8 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        return view("ticket.order.create");
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -36,15 +34,15 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(TicketOrder $ticketOrder)
     {
-        //
+        return view("ticket.order.show");
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Ticket $ticket)
+    public function edit(TicketOrder $ticketOrder)
     {
         //
     }
@@ -52,7 +50,7 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ticket $ticket)
+    public function update(Request $request, TicketOrder $ticketOrder)
     {
         //
     }
@@ -60,7 +58,7 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ticket $ticket)
+    public function destroy(TicketOrder $ticketOrder)
     {
         //
     }
