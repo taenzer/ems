@@ -57,4 +57,8 @@ class Event extends Model
     public function ticketProducts(){
         return $this->hasManyThrough(TicketProduct::class, TicketPermit::class, "event_id", "id", "id", "ticket_product_id");
     }
+
+    public function tickets(){
+        return $this->hasManyThrough(Ticket::class, TicketPermit::class, "event_id", "ticket_product_id", "id", "ticket_product_id");
+    }
 }
