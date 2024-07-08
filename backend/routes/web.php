@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('events/{event}/shares/{share}/destroy', [ShareController::class, 'destroy'])->name("events.shares.destroy")->middleware(EventOwnerOrShareOnly::class);
 
     Route::get('tickets', [TicketController::class, 'dashboard'])->name('tickets.dashboard');
+    // Route::put('tickets/{ticket}/checkin', [TicketController::class, 'checkin'])->name('tickets.checkin'); Vorerst nur über API, später ggf über Webinterface
+
     Route::get('tickets/orders', [TicketOrderController::class, 'index'])->name('tickets.orders.index');
     Route::get('tickets/orders/create', [TicketOrderController::class, 'create'])->name('tickets.orders.create');
     Route::get('tickets/orders/{ticketOrder}', [TicketOrderController::class, 'show'])->name('tickets.orders.show');
