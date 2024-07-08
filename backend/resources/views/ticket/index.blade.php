@@ -29,8 +29,16 @@
         </x-body-box>
 
         <x-body-box>
-            <livewire:livewire-column-chart {{-- key="{{ $columnChartModel->reactiveKey() }}" --}} :column-chart-model="$columnChartModel" />
-            <livewire:livewire-line-chart style="height: 300px" {{-- key="{{ $columnChartModel->reactiveKey() }}" --}} :line-chart-model="$salesChartModel" />
+            
+            <div class="relative mb-4"> 
+                <h3 class="mb-2 font-semibold">Ticketverkäufe nach Veranstaltung</h3> 
+                <x-charts.event-ticket-sales :ticketSalesPerEvent="$ticketSalesPerEvent" chartId="ticket-sales-per-event" />
+            </div>
+            
+            <div class="relative">
+                <h3 class="mb-2 font-semibold">Ticketverkäufe nach Tag</h3>
+                <x-charts.daily-ticket-sales :ticketSalesPerDay="$ticketSalesPerDay" chartId="ticket-sales-per-day" />
+            </div>
         </x-body-box>
 
     </x-body>
