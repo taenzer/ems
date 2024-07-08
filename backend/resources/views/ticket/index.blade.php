@@ -13,13 +13,28 @@
             Work in Progress!
         </x-body-box>
 
+        <x-body-box>
+
+            <div class="relative mb-4">
+                <h3 class="mb-2 font-semibold">Ticketverkäufe nach Veranstaltung</h3>
+                <x-charts.event-ticket-sales :ticketSalesPerEvent="$ticketSalesPerEvent" chartId="ticket-sales-per-event" />
+            </div>
+        </x-body-box>
+        <x-body-box>
+            <div class="relative">
+                <h3 class="mb-2 font-semibold">Ticketverkäufe nach Tag</h3>
+                <x-charts.daily-ticket-sales :ticketSalesPerDay="$ticketSalesPerDay" chartId="ticket-sales-per-day" />
+            </div>
+        </x-body-box>
+
 
         <x-body-box>
             <h3 class="mb-2 font-semibold">Verkaufte Tickets</h3>
             <div class="flex flex-col gap-2">
                 @forelse($events as $event)
                     <div class="flex items-center justify-between rounded bg-slate-100 p-4">
-                        <p><strong class="font-semibold">{{ $event->name }}</strong> <br> {{ $event->dateString() }}</p>
+                        <p><strong class="font-semibold">{{ $event->name }}</strong> <br> {{ $event->dateString() }}
+                        </p>
                         <p>{{ $event->tickets->count() }}</p>
                     </div>
                 @empty
@@ -28,18 +43,7 @@
 
         </x-body-box>
 
-        <x-body-box>
-            
-            <div class="relative mb-4"> 
-                <h3 class="mb-2 font-semibold">Ticketverkäufe nach Veranstaltung</h3> 
-                <x-charts.event-ticket-sales :ticketSalesPerEvent="$ticketSalesPerEvent" chartId="ticket-sales-per-event" />
-            </div>
-            
-            <div class="relative">
-                <h3 class="mb-2 font-semibold">Ticketverkäufe nach Tag</h3>
-                <x-charts.daily-ticket-sales :ticketSalesPerDay="$ticketSalesPerDay" chartId="ticket-sales-per-day" />
-            </div>
-        </x-body-box>
+
 
     </x-body>
 </x-app-layout>

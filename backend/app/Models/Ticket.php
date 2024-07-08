@@ -23,6 +23,14 @@ class Ticket extends Model
         return $this->belongsTo(TicketProduct::class);
     }
 
+    public function checkins(){
+        return $this->hasMany(TicketCheckin::class);
+    }
+
+    public function permits(){
+        return $this->hasManyThrough(TicketPermit::class, TicketProduct::class, 'id', 'ticket_product_id', 'ticket_product_id', 'id');
+    }
+
     static function generateSecret($length = 8)
     {
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';

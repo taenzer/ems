@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\TicketOrder;
+use App\Models\Event;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ApiTicketController extends Controller
@@ -63,6 +64,23 @@ class ApiTicketController extends Controller
         $tickets = Ticket::whereIn("id", $attributes["ticket_ids"])->with(["ticketOrder", "ticketPrice", "ticketProduct"])->get();
         $pdf = Pdf::loadView('pdf.ticket', array("tickets" => $tickets));
         return $pdf->download("report.pdf");
+    }
+
+    public function checkIn(Ticket $ticket, Event $event)
+    {
+        if($ticket->permits()->where("event_id", $event->id)->count() == 0){
+            return response()->json(["error" => "Das Ticket ist nicht für diese Veranstaltung gültig."], 422);
+        }
+
+        if($ticket->checkins()->where("event_id", $event->id)->count() != 0){
+            return response()->json(["error" => "Das Ticket wurde bereits eingecheckt."], 422);
+        }
+        $ticket->checkins()->create([
+            'event_id' => $event->id,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return response()->json(["message" => "Das Ticket wurde erfolgreich eingecheckt."], 200);
     }
 
     /**
