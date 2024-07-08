@@ -19,47 +19,35 @@ class TicketController extends Controller
     {
 
         $events = auth()->user()->getEvents();
-        $columnChartModel = (new ColumnChartModel())->setTitle('Ticketverkäufe nach Veranstaltung');
-        
-        $events->map(function ($event) use ($columnChartModel){
-            $columnChartModel->addColumn($event->name, $event->tickets->count(), "#dedede");
+        $ticketSalesPerEvent = collect();
+        $events->map(function ($event) use ($ticketSalesPerEvent){
+            $ticketSalesPerEvent->put($event->name, $event->tickets->count());
         });
 
-        $salesChartModel = (new LineChartModel())->setTitle('Ticketverkäufe nach Datum')->singleLine();
-        $salesData = collect();
+        $ticketSalesPerDay = collect();
         $tickets = auth()->user()->getEventTickets();
-
         $tickets = $tickets->map(function ($ticket) {
             return $ticket->created_at->format('Y-m-d');
         });
-
         $ticketStats = array_count_values($tickets->toArray());
+        
         // Erstes und letztes Datum bestimmen
         if (!empty($ticketStats)) {
             $firstDate = Carbon::parse(array_key_first($ticketStats));
+            $firstDate->subDay(1);
         } else {
             $firstDate = Carbon::today();
         }
-        $lastDate = Carbon::today();
+        $lastDate = Carbon::today()->addDay(1);
 
-        // Leeres Array mit allen möglichen Daten initialisieren
-        $dateRange = array();
         for ($date = $firstDate; $date->lte($lastDate); $date->addDay()) {
             $dt = $date->format('Y-m-d');
-            $salesChartModel->addPoint($date->format('d.m.Y'), isset($ticketStats[$dt]) ? $ticketStats[$dt] : 0);     
+            $ticketSalesPerDay->put($dt, $ticketStats[$dt] ?? 0);
         }
 
-
-
-        $columnChartModel->setAnimated(true)
-            ->setXAxisVisible(true)
-            ->withoutLegend()
-            ->setDataLabelsEnabled(true);
-
-
         return view('ticket.index', [
-            'columnChartModel' => $columnChartModel,
-            'salesChartModel' => $salesChartModel,
+            'ticketSalesPerEvent' => $ticketSalesPerEvent,
+            'ticketSalesPerDay' => $ticketSalesPerDay,
             'events' => $events,
         ]);
     }

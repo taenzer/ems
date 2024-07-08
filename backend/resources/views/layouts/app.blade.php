@@ -41,8 +41,8 @@
         </div>
     </body>
     <footer>
-    <livewire:scripts />
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    @livewireChartsScripts
-        </footer>
+        <livewire:scripts />
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        @stack('custom-js')
+    </footer>
 </html>
