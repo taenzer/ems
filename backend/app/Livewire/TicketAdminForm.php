@@ -16,6 +16,7 @@ class TicketAdminForm extends Component
     // #[Validate('required')]
     //public $ticket_design_id;
     public $tixAvailable;
+    public $boxoffice_fee;
     public $pricings = array();
     public $permits = array();
     public $exists = false;
@@ -27,6 +28,7 @@ class TicketAdminForm extends Component
         $this->product->name = $this->name;
         $this->product->tixAvailable = $this->tixAvailable;
         //$this->product->ticket_design_id = 1;
+        $this->product->boxoffice_fee = $this->boxoffice_fee;
         $this->product->save();
 
         $this->product->prices()->whereNotIn('id', array_keys($this->pricings))->delete();
@@ -45,6 +47,7 @@ class TicketAdminForm extends Component
             $this->name = $product->name;
             $this->tixAvailable = $product->tixAvailable;
             //$this->ticket_design_id = $product->ticket_design_id;
+            $this->boxoffice_fee = $product->boxoffice_fee;
             $this->pricings = $product->prices->mapWithKeys(function($pricing){
                 return [$pricing->id => $pricing];
             })->toArray();

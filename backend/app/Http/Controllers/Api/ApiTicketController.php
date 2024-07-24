@@ -68,19 +68,22 @@ class ApiTicketController extends Controller
 
     public function checkIn(Ticket $ticket, Event $event)
     {
-        if($ticket->permits()->where("event_id", $event->id)->count() == 0){
-            return response()->json(["error" => "Das Ticket ist nicht für diese Veranstaltung gültig."], 422);
+        $validation = $ticket->validate($event);
+
+        if (!$validation["ticketValidationResult"] !== "valid") {
+            return response()->json(["message" => $validation["error"]], 422);
         }
 
-        if($ticket->checkins()->where("event_id", $event->id)->count() != 0){
-            return response()->json(["error" => "Das Ticket wurde bereits eingecheckt."], 422);
-        }
         $ticket->checkins()->create([
             'event_id' => $event->id,
             'user_id' => auth()->user()->id,
         ]);
 
         return response()->json(["message" => "Das Ticket wurde erfolgreich eingecheckt."], 200);
+    }
+
+    public function validateTicket(Ticket $ticket, Event $event){
+        return response()->json($ticket->validate($event), 200);
     }
 
     /**

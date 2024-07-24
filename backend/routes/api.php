@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('tickets/pdf', [ApiTicketController::class, 'getTicketPdf']);
 
     Route::put('tickets/{ticket}/checkin/{event}', [ApiTicketController::class, 'checkin']);
+    Route::get('tickets/{ticket}/validate/{event}', [ApiTicketController::class, 'validateTicket']);
 
 
     /*     Route::put("events/{event}/status", [ApiEventController::class, 'toggleStatus'])->name("events.status.toggle");

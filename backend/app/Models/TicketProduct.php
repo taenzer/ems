@@ -12,7 +12,7 @@ class TicketProduct extends Model
 {
     use HasFactory;
 
-    public $fillable = ["name", "tixAvailable", "ticket_design_id"];
+    public $fillable = ["name", "tixAvailable", "ticket_design_id", "boxoffice_fee"];
 
     public function prices(){
         return $this->hasMany(TicketPrice::class);
