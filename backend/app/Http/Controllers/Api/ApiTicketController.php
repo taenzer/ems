@@ -66,11 +66,22 @@ class ApiTicketController extends Controller
         return $pdf->download("report.pdf");
     }
 
-    public function checkIn(Ticket $ticket, Event $event)
+    public function checkIn(Ticket $ticket, Event $event, Request $request)
     {
-        $validation = $ticket->validate($event);
+        $request->validate([
+            "secret" => [
+                "required",
+                "string",
+                function ($attribute, $value, $fail) use ($ticket) {
+                    if ($ticket->secret !== $value) {
+                        $fail("The ticket secret is invalid.");
+                    }
+                }
+            ],
+        ]);
 
-        if (!$validation["ticketValidationResult"] !== "valid") {
+        $validation = $ticket->validate($event);
+        if ($validation["ticketValidationResult"] !== "valid") {
             return response()->json(["message" => $validation["error"]], 422);
         }
 
@@ -82,7 +93,18 @@ class ApiTicketController extends Controller
         return response()->json(["message" => "Das Ticket wurde erfolgreich eingecheckt."], 200);
     }
 
-    public function validateTicket(Ticket $ticket, Event $event){
+    public function validateTicket(Ticket $ticket, Event $event, Request $request){
+        $request->validate([
+            "secret" => [
+                "required",
+                "string", 
+                function ($attribute, $value, $fail) use ($ticket) {
+                    if ($ticket->secret !== $value) {
+                        $fail("The ticket secret is invalid.");
+                    }
+                }
+            ],
+        ]);
         return response()->json($ticket->validate($event), 200);
     }
 
