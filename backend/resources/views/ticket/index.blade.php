@@ -27,6 +27,13 @@
             </div>
         </x-body-box>
 
+        <x-body-box>
+            <div class="relative">
+                <h3 class="mb-2 font-semibold">Ticketverkäufe nach Gateway</h3>
+                <x-charts.ticket-sales-by-gateway :ticketSalesPerGateway="$ticketSalesPerGateway" chartId="ticket-sales-per-gateway" />
+            </div>
+        </x-body-box>
+
 
         <x-body-box>
             <h3 class="mb-2 font-semibold">Verkaufte Tickets</h3>

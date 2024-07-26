@@ -25,10 +25,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name')->default('Online Ticket');
             $table->integer('tixAvailable')->nullable();
-            // $table
-            //     ->foreignIdFor(TicketDesign::class)
-            //     ->constrained()
-            //     ->restrict();
             $table->timestamps();
         });
         Schema::create('ticket_permits', function (Blueprint $table) {

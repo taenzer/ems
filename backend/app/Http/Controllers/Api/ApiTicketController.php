@@ -66,21 +66,46 @@ class ApiTicketController extends Controller
         return $pdf->download("report.pdf");
     }
 
-    public function checkIn(Ticket $ticket, Event $event)
+    public function checkIn(Ticket $ticket, Event $event, Request $request)
     {
-        if($ticket->permits()->where("event_id", $event->id)->count() == 0){
-            return response()->json(["error" => "Das Ticket ist nicht für diese Veranstaltung gültig."], 422);
+        $request->validate([
+            "secret" => [
+                "required",
+                "string",
+                function ($attribute, $value, $fail) use ($ticket) {
+                    if ($ticket->secret !== $value) {
+                        $fail("The ticket secret is invalid.");
+                    }
+                }
+            ],
+        ]);
+
+        $validation = $ticket->validate($event);
+        if ($validation["ticketValidationResult"] !== "valid") {
+            return response()->json(["message" => $validation["error"]], 422);
         }
 
-        if($ticket->checkins()->where("event_id", $event->id)->count() != 0){
-            return response()->json(["error" => "Das Ticket wurde bereits eingecheckt."], 422);
-        }
         $ticket->checkins()->create([
             'event_id' => $event->id,
             'user_id' => auth()->user()->id,
         ]);
 
         return response()->json(["message" => "Das Ticket wurde erfolgreich eingecheckt."], 200);
+    }
+
+    public function validateTicket(Ticket $ticket, Event $event, Request $request){
+        $request->validate([
+            "secret" => [
+                "required",
+                "string", 
+                function ($attribute, $value, $fail) use ($ticket) {
+                    if ($ticket->secret !== $value) {
+                        $fail("The ticket secret is invalid.");
+                    }
+                }
+            ],
+        ]);
+        return response()->json($ticket->validate($event), 200);
     }
 
     /**
