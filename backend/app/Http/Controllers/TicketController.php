@@ -26,10 +26,10 @@ class TicketController extends Controller
 
         $ticketSalesPerDay = collect();
         $tickets = auth()->user()->getEventTickets();
-        $tickets = $tickets->map(function ($ticket) {
+        $ticketSales = $tickets->map(function ($ticket) {
             return $ticket->created_at->format('Y-m-d');
         });
-        $ticketStats = array_count_values($tickets->toArray());
+        $ticketStats = array_count_values($ticketSales->toArray());
         
         // Erstes und letztes Datum bestimmen
         if (!empty($ticketStats)) {
@@ -45,9 +45,14 @@ class TicketController extends Controller
             $ticketSalesPerDay->put($dt, $ticketStats[$dt] ?? 0);
         }
 
+        $ticketSalesPerGateway = $tickets->map(function ($ticket) {
+            return $ticket->ticketOrder->gateway;
+        })->countBy();
+
         return view('ticket.index', [
             'ticketSalesPerEvent' => $ticketSalesPerEvent,
             'ticketSalesPerDay' => $ticketSalesPerDay,
+            'ticketSalesPerGateway' => $ticketSalesPerGateway,
             'events' => $events,
         ]);
     }
