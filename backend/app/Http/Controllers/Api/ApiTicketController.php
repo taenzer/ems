@@ -25,6 +25,7 @@ class ApiTicketController extends Controller
             "gateway" => "required|string",
             "total" => "required|numeric",
             "meta" => "nullable|array",
+            "checkin" => "nullable|boolean",
             "tickets" => "required|array",
             "tickets.*.quantity" => "required|integer",
             "tickets.*.ticket_product_id" => "required|integer|exists:ticket_products,id",
@@ -34,6 +35,7 @@ class ApiTicketController extends Controller
         $order = new TicketOrder();
         $order->gateway = $attributes["gateway"];
         $order->total = $attributes["total"];
+        // TODO: Check if meta is not empty
         $order->meta = json_encode($attributes["meta"]);
         $order->user_id = auth()->user()->id;
         $order->save();
@@ -47,6 +49,8 @@ class ApiTicketController extends Controller
                     "ticket_price_id" => $ticket_data["ticket_price_id"],
                     "secret" => Ticket::generateSecret(),
                 ])->id);
+
+                // TODO: Check in if $attributes["checkin"] is true
             }
         }
 
