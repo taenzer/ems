@@ -33,18 +33,22 @@ class User extends Authenticatable
         return $this->hasMany(Event::class)->where('active', true)->get()->merge($this->sharedEvents);
     }
 
-    public function getEventTickets(){
+    public function getEventTickets()
+    {
         $events = $this->getEvents();
         $tickets = collect();
-        $events->map(function($event) use ($tickets){
-            $event->tickets->map(function($ticket) use ($tickets){
-                
-                    $tickets->put($ticket->id, $ticket);
-                
-                
+        $events->map(function ($event) use ($tickets) {
+            $event->tickets->map(function ($ticket) use ($tickets) {
+
+                $tickets->put($ticket->id, $ticket);
             });
         });
         return $tickets->values();
+    }
+
+    public function ticketOrders()
+    {
+        return $this->hasMany(TicketOrder::class);
     }
 
     /**
