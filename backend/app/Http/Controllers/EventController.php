@@ -16,7 +16,8 @@ class EventController extends Controller
 
         $attributes = $request->validate([
             "report-type" => "required|String",
-            "gateways" => "nullable|Array"
+            "gateways" => "required|Array",
+            "user" => "nullable|Integer"
         ]);
 
         // Get and group the order items by product_id, name and price
