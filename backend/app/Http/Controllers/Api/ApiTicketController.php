@@ -25,19 +25,23 @@ class ApiTicketController extends Controller
             "gateway" => "required|string",
             "total" => "required|numeric",
             "meta" => "nullable|array",
-            "checkin" => "nullable|boolean",
             "tickets" => "required|array",
             "tickets.*.quantity" => "required|integer",
             "tickets.*.ticket_product_id" => "required|integer|exists:ticket_products,id",
             "tickets.*.ticket_price_id" => "required|integer|exists:ticket_prices,id",
+            "tickets.*.boxoffice_fee" => "nullable|numeric",
         ]);
 
         $order = new TicketOrder();
         $order->gateway = $attributes["gateway"];
         $order->total = $attributes["total"];
-        // TODO: Check if meta is not empty
-        $order->meta = json_encode($attributes["meta"]);
+
+        if (isset($attribtes["meta"])) {
+            $order->meta = json_encode($attributes["meta"]);
+        }
+
         $order->user_id = auth()->user()->id;
+
         $order->save();
 
         $tickets = collect();
@@ -48,9 +52,8 @@ class ApiTicketController extends Controller
                     "ticket_product_id" => $ticket_data["ticket_product_id"],
                     "ticket_price_id" => $ticket_data["ticket_price_id"],
                     "secret" => Ticket::generateSecret(),
+                    "boxoffice_fee" => $ticket_data["boxoffice_fee"],
                 ])->id);
-
-                // TODO: Check in if $attributes["checkin"] is true
             }
         }
 
@@ -97,11 +100,12 @@ class ApiTicketController extends Controller
         return response()->json(["message" => "Das Ticket wurde erfolgreich eingecheckt."], 200);
     }
 
-    public function validateTicket(Ticket $ticket, Event $event, Request $request){
+    public function validateTicket(Ticket $ticket, Event $event, Request $request)
+    {
         $request->validate([
             "secret" => [
                 "required",
-                "string", 
+                "string",
                 function ($attribute, $value, $fail) use ($ticket) {
                     if ($ticket->secret !== $value) {
                         $fail("The ticket secret is invalid.");

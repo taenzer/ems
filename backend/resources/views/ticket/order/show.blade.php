@@ -35,8 +35,11 @@
                             </p>
                         </div>
                         <div class="flex items-center gap-4">
-                            <div>
-                                @money($ticket->ticketPrice->price)
+                            <div class="flex flex-col items-end">
+                                @money($ticket->price())
+                                @if($ticket->boxoffice_fee != 0)
+                                <small class="text-gray-400">inkl. @money($ticket->boxoffice_fee) AK-Zuschlag</small>
+                                @endif
                             </div>
                             <div>
                                 @if ($ticket->checkins->count() == $ticket->permits->count())
