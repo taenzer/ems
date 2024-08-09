@@ -57,7 +57,11 @@
             </table>
         </x-body-box>
         <x-body-box>
-            <h3 class="mb-2 font-semibold">Tickets</h3>
+            <div class="mb-4 flex items-center justify-between">
+                <h3 class="mb-2 font-semibold">Tickets</h3>
+                <x-secondary-button x-data="{}"
+                    x-on:click.prevent="$dispatch('open-modal', 'generate-report');">Bericht</x-secondary-button>
+            </div>
             <div class="flex flex-col gap-2">
             @forelse($ticketProducts as $ticketProduct)
                 <div class="bg-slate-100 rounded p-4 flex items-center justify-between">
@@ -220,27 +224,7 @@
             @endif
             <x-modal name="generate-report">
                 <div class="p-6">
-                    <form action="{{ route('events.report.create', ['event' => $event]) }}" method="POST">
-                        @csrf
-                        @method('post')
-                        <h2 class="mb-2 text-lg font-semibold">Veranstaltungsbericht erstellen</h2>
-                        <x-select name="report-type" label="Art des Berichts">
-                            <option value="sales">Verkaufsbericht</option>
-                        </x-select>
-                        <div class="mb-6">
-                            <p class="mb-2 block text-xs font-bold uppercase text-gray-700">
-                                Gateways einschließen
-                            </p>
-                            <div class="flex items-center gap-4">
-                                @foreach ($event->saleGateways() as $gw)
-                                    <x-input.checkbox name="gateways[]" value="{{ $gw }}"><span
-                                            class="uppercase">{{ $gw }}</span></x-input.checkbox>
-                                @endforeach
-                            </div>
-                        </div>
-                        <x-primary-button>Bericht erstellen</x-primary-button>
-                        <x-secondary-button x-on:click="$dispatch('close')">Abbrechen</x-secondary-button>
-                    </form>
+                    <livewire:event-report-generation-form :event="$event"/>
                 </div>
 
             </x-modal>

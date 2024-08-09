@@ -11,41 +11,43 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class EventController extends Controller
 {
 
-    public function generateReport(Request $request, Event $event){
+    public function generateReport(Request $request, Event $event)
+    {
 
         $attributes = $request->validate([
             "report-type" => "required|String",
-            "gateways" => "nullable|Array"
+            "gateways" => "required|Array",
+            "user" => "nullable|Integer"
         ]);
 
         // Get and group the order items by product_id, name and price
-        $items = 
+        $items =
             OrderItem::with("order") // Select all OrderItems with the Order Data
-                ->whereHas('order', function($q) use($event) {
-                    $q->where("event_id", $event->id); // Only Items of Orders of the selected Event
-                })
-                ->whereHas('order', function($q) use($attributes) {
-                    $q->whereIn("gateway", $attributes["gateways"]); // Only Items of Orders with the given gateway
-                })
-                ->get();
+            ->whereHas('order', function ($q) use ($event) {
+                $q->where("event_id", $event->id); // Only Items of Orders of the selected Event
+            })
+            ->whereHas('order', function ($q) use ($attributes) {
+                $q->whereIn("gateway", $attributes["gateways"]); // Only Items of Orders with the given gateway
+            })
+            ->get();
         $orderItems = $items->groupBy('product_id')
-                ->map(function($i){ 
-                    return array(
-                        "totalQuantity" => $i->sum("quantity"),
-                        "totalItemTotal" => $i->sum("itemTotal"), 
-                        "grouped" => $i->groupBy('name')
-                                        ->map(function ($item) {
-                                            $ret = $item->groupBy("price")->map(function($ps){
-                                                return array("price" => $ps->first()->price, "name" => $ps->first()->name, "quantity" => $ps->sum("quantity"), "itemTotal" => $ps->sum("itemTotal"));
-                                            });
-                                            return $ret;
-                                        }),
-                        );
-                });
+            ->map(function ($i) {
+                return array(
+                    "totalQuantity" => $i->sum("quantity"),
+                    "totalItemTotal" => $i->sum("itemTotal"),
+                    "grouped" => $i->groupBy('name')
+                        ->map(function ($item) {
+                            $ret = $item->groupBy("price")->map(function ($ps) {
+                                return array("price" => $ps->first()->price, "name" => $ps->first()->name, "quantity" => $ps->sum("quantity"), "itemTotal" => $ps->sum("itemTotal"));
+                            });
+                            return $ret;
+                        }),
+                );
+            });
 
-                /* Never Change a running System... not shure how it works, but it works! */
+        /* Never Change a running System... not shure how it works, but it works! */
 
-        
+
         $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $orderItems, "event" => $event, "gateways" => $attributes["gateways"], "eventTotal" => $items->sum("itemTotal"), "eventQty" => $items->sum("quantity")));
         return $pdf->download("report.pdf");
     }

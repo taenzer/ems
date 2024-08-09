@@ -10,35 +10,46 @@ class Ticket extends Model
 {
     use HasFactory;
 
-    public $fillable = ['ticket_product_id', 'ticket_price_id', 'secret'];
+    public $fillable = ['ticket_product_id', 'ticket_price_id', 'secret', 'boxoffice_fee'];
 
-    public function ticketOrder(){
+    public function ticketOrder()
+    {
         return $this->belongsTo(TicketOrder::class);
     }
 
-    public function ticketPrice(){
+    public function ticketPrice()
+    {
         return $this->belongsTo(TicketPrice::class);
     }
 
-    public function ticketProduct(){
+    public function price()
+    {
+        return $this->ticketPrice->price + $this->boxoffice_fee;
+    }
+
+    public function ticketProduct()
+    {
         return $this->belongsTo(TicketProduct::class);
     }
 
-    public function checkins(){
+    public function checkins()
+    {
         return $this->hasMany(TicketCheckin::class);
     }
 
-    public function permits(){
+    public function permits()
+    {
         return $this->hasManyThrough(TicketPermit::class, TicketProduct::class, 'id', 'ticket_product_id', 'ticket_product_id', 'id');
     }
 
-    public function validate(Event $event) {
+    public function validate(Event $event)
+    {
         if ($this->permits()->where("event_id", $event->id)->count() == 0) {
-            return array("ticketValidationResult" => "notForThisEvent", "error" =>"Das Ticket ist nicht für diese Veranstaltung gültig.");
+            return array("ticketValidationResult" => "notForThisEvent", "error" => "Das Ticket ist nicht für diese Veranstaltung gültig.");
         }
 
         if ($this->checkins()->where("event_id", $event->id)->count() != 0) {
-            return array("ticketValidationResult" => "alreadyCheckedIn", "error" =>"Das Ticket wurde bereits eingecheckt.");
+            return array("ticketValidationResult" => "alreadyCheckedIn", "error" => "Das Ticket wurde bereits eingecheckt.");
         }
         return array("ticketValidationResult" => "valid");
     }
@@ -53,6 +64,4 @@ class Ticket extends Model
         }
         return $randomString;
     }
-
-
 }

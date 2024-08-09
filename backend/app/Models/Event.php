@@ -31,7 +31,8 @@ class Event extends Model
         return "TODO";
     }
 
-    public function saleGateways(){
+    public function saleGateways()
+    {
         return $this->orders->pluck("gateway")->unique();
     }
 
@@ -50,15 +51,28 @@ class Event extends Model
         return $this->belongsToMany(Product::class)->as("product_data")->withPivot(['price', 'prio'])->withTimestamps();
     }
 
-    public function orders(){
+    public function orders()
+    {
         return $this->hasMany(Order::class);
     }
 
-    public function ticketProducts(){
+    public function ticketProducts()
+    {
         return $this->hasManyThrough(TicketProduct::class, TicketPermit::class, "event_id", "id", "id", "ticket_product_id");
     }
 
-    public function tickets(){
+    public function tickets()
+    {
         return $this->hasManyThrough(Ticket::class, TicketPermit::class, "event_id", "ticket_product_id", "id", "ticket_product_id");
+    }
+
+    public function ticketPermits()
+    {
+        return $this->hasMany(TicketPermit::class);
+    }
+
+    public function sellers()
+    {
+        return $this->hasManyThrough(User::class, Order::class, "event_id", "id", "user_id", "id");
     }
 }
