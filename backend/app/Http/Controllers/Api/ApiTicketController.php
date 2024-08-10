@@ -26,6 +26,7 @@ class ApiTicketController extends Controller
             "total" => "required|numeric",
             "meta" => "nullable|array",
             "tickets" => "required|array",
+            "addEventCheckin" => "nullable|integer|exists:events,id",
             "tickets.*.quantity" => "required|integer",
             "tickets.*.ticket_product_id" => "required|integer|exists:ticket_products,id",
             "tickets.*.ticket_price_id" => "required|integer|exists:ticket_prices,id",
@@ -48,12 +49,21 @@ class ApiTicketController extends Controller
         foreach ($attributes["tickets"] as $ticket_data) {
             $qty = $ticket_data["quantity"];
             for ($i = 0; $i < $qty; $i++) {
-                $tickets->push($order->tickets()->create([
+                $tick = $order->tickets()->create([
                     "ticket_product_id" => $ticket_data["ticket_product_id"],
                     "ticket_price_id" => $ticket_data["ticket_price_id"],
                     "secret" => Ticket::generateSecret(),
                     "boxoffice_fee" => $ticket_data["boxoffice_fee"],
-                ])->id);
+                ]);
+                
+                if(isset($attributes["addEventCheckin"])){
+                    $tick->checkins()->create([
+                        "event_id" => $attributes["addEventCheckin"],
+                        "user_id" => auth()->user()->id,
+                    ]);
+                }
+
+                $tickets->push($tick->id);
             }
         }
 
