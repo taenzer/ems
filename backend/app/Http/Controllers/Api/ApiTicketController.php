@@ -49,14 +49,19 @@ class ApiTicketController extends Controller
         foreach ($attributes["tickets"] as $ticket_data) {
             $qty = $ticket_data["quantity"];
             for ($i = 0; $i < $qty; $i++) {
-                $tick = $order->tickets()->create([
+                $ticketData = [
                     "ticket_product_id" => $ticket_data["ticket_product_id"],
                     "ticket_price_id" => $ticket_data["ticket_price_id"],
                     "secret" => Ticket::generateSecret(),
-                    "boxoffice_fee" => $ticket_data["boxoffice_fee"],
-                ]);
-                
-                if(isset($attributes["addEventCheckin"])){
+                ];
+
+                if (isset($ticket_data["boxoffice_fee"])) {
+                    $ticketData["boxoffice_fee"] = $ticket_data["boxoffice_fee"];
+                }
+
+                $tick = $order->tickets()->create($ticketData);
+
+                if (isset($attributes["addEventCheckin"])) {
                     $tick->checkins()->create([
                         "event_id" => $attributes["addEventCheckin"],
                         "user_id" => auth()->user()->id,
