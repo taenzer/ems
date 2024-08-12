@@ -20,7 +20,7 @@ class TicketController extends Controller
 
         $events = auth()->user()->getEvents();
         $ticketSalesPerEvent = collect();
-        $events->map(function ($event) use ($ticketSalesPerEvent){
+        $events->map(function ($event) use ($ticketSalesPerEvent) {
             $ticketSalesPerEvent->put($event->name, $event->tickets->count());
         });
 
@@ -30,7 +30,7 @@ class TicketController extends Controller
             return $ticket->created_at->format('Y-m-d');
         });
         $ticketStats = array_count_values($ticketSales->toArray());
-        
+
         // Erstes und letztes Datum bestimmen
         if (!empty($ticketStats)) {
             $firstDate = Carbon::parse(array_key_first($ticketStats));
@@ -57,7 +57,73 @@ class TicketController extends Controller
         ]);
     }
 
-     /**
+    public function analytics(Event $event)
+    {
+        // First, get all TicketOrders of the Event
+        $eventTicketOrders = $event->ticketProducts->flatMap(function ($products) {
+            return $products->orders;
+        });
+        // Group the orders by gateway
+        $ticketsByGateway = $eventTicketOrders->groupBy('gateway')
+            // Now map over all orders to get the Tickets
+            ->map(function ($orders) use ($event) {
+                // Extract the Tickets of the order
+                return $orders->flatMap(function ($order) {
+                    return $order->tickets;
+                })
+                    // Group them by TicketPrice and TicketProduct
+                    ->groupBy(function ($ticket) {
+                        return $ticket->ticket_product_id . "-" . $ticket->ticket_price_id;
+                    })
+                    // Map over them to calculate counts
+                    ->map(function ($tickets) use ($event) {
+                        return [
+                            "ticket_product" => $tickets->first()->ticketProduct,
+                            "ticket_price" => $tickets->first()->ticketPrice,
+                            // Tickets Sold = trivial
+                            "tickets_sold" => $tickets->count(),
+                            // Get Ticket Checkins of the ticket, filter and count them
+                            "tickets_checkins" => $tickets->flatMap(function ($ticket) use ($event) {
+                                // filter because we only want checkins of the selected event
+                                return $ticket->checkins->filter(function ($checkin) use ($event) {
+                                    return $checkin->event_id == $event->id;
+                                });
+                            })->count()
+                        ];
+                    })
+                ;
+            });
+
+
+
+        return view('ticket.analytics', ["event" => $event, "ticketsByGateway" => $ticketsByGateway]);
+    }
+
+    /**
+     * Helper function to easily check in all tickets sold at the boxoffice
+     */
+    public function checkInAllBoxofficeTickets(Event $event)
+    {
+        $tickets = $event->tickets
+            ->filter(function ($ticket) {
+                return in_array($ticket->ticketOrder->gateway, array("BO-BAR", "BO-CARD"));
+            })
+            ->filter(function ($ticket) use ($event) {
+                return $ticket->checkins->filter(function ($checkin) use ($event) {
+                    return $checkin->event_id == $event->id;
+                })->count() == 0;
+            });
+
+        $tickets->map(function ($ticket) use ($event) {
+            $ticket->checkins()->create([
+                "event_id" => $event->id,
+                "user_id" => auth()->user()->id,
+            ]);
+        });
+        return back();
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(Ticket $ticket)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\OrderItem;
 use App\Models\Share;
+use App\Models\TicketProduct;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 

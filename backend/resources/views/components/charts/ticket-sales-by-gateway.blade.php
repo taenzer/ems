@@ -11,35 +11,25 @@
 @push('custom-js')
     <script>
         var options = {
-            chart: {
-                height: 350,
-                type: "pie",
-                zoom: {
-                    enabled: false
-                },
-            },
-            dataLabels: {
-                enabled: true
-            },
             colors: @json($colors),
-            series: [{
-                name: "Gateway",
-                data: []
-            }],
-
-            labels: @json($ticketSalesPerGateway->keys()),
-
-            legend: {
-                show: false,
-            }
-        };
-        var options = {
             series: @json($ticketSalesPerGateway->values()),
             chart: {
                 width: 500,
                 type: 'pie',
+                colors: @json($colors),
             },
+            fill: {
+                colors: @json($colors),}
+            ,
             labels: @json($ticketSalesPerGateway->keys()),
+            legend: {
+                // Show the legend
+                show: true,
+                markers: {
+                // Set the legend colors as the ones passed in
+                fillColors: @json($colors)
+                }
+            },
         };
 
         var chart = new ApexCharts(document.querySelector("#{{ $chartId }}"), options);
