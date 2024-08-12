@@ -68,8 +68,10 @@ class TicketController extends Controller
             // Now map over all orders to get the Tickets
             ->map(function ($orders) use ($event) {
                 // Extract the Tickets of the order
-                return $orders->flatMap(function ($order) {
-                    return $order->tickets;
+                return $orders->flatMap(function ($order) use ($event) {
+                    return $order->tickets->filter(function ($ticket) use ($event) {
+                        return $ticket->validate($event)["ticketValidationResult"] != "notForThisEvent";
+                    });
                 })
                     // Group them by TicketPrice and TicketProduct
                     ->groupBy(function ($ticket) {

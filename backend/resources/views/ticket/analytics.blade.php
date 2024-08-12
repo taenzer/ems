@@ -31,6 +31,21 @@
                         @endforeach
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr class="font-semibold text-gray-900 dark:text-white">
+                        <th scope="row" class="px-6 py-3 text-base" colspan="2">Summe</th>
+                        <td class="px-6 py-3">{{ 
+                            $ticketsByGateway->map(function($tickets){
+                                return $tickets->sum('tickets_sold');
+                            })->sum()
+                        }}</td>
+                        <td class="px-6 py-3">{{ 
+                            $ticketsByGateway->map(function($tickets){
+                                return $tickets->sum('tickets_checkins');
+                            })->sum()
+                        }}</td>
+                    </tr>
+                </tfoot>
             </table>
 
         </x-body-box>
