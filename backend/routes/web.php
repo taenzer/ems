@@ -42,7 +42,11 @@ Route::middleware('auth')->group(function () {
     Route::post('events/{event}/shares/store', [ShareController::class, 'store'])->name("events.shares.store")->middleware(EventOwnerOrShareOnly::class);
     Route::delete('events/{event}/shares/{share}/destroy', [ShareController::class, 'destroy'])->name("events.shares.destroy")->middleware(EventOwnerOrShareOnly::class);
 
+
+
     Route::get('tickets', [TicketController::class, 'dashboard'])->name('tickets.dashboard');
+    Route::get('tickets/analytics/{event}', [TicketController::class, 'analytics'])->name("tickets.event.analytics");
+    Route::get('tickets/utils/checkinBoxofficeTickets/{event}', [TicketController::class, 'checkInAllBoxofficeTickets'])->name("tickets.utils.boxofficeTicketCheckin");
     // Route::put('tickets/{ticket}/checkin', [TicketController::class, 'checkin'])->name('tickets.checkin'); Vorerst nur über API, später ggf über Webinterface
 
     Route::get('tickets/orders', [TicketOrderController::class, 'index'])->name('tickets.orders.index');

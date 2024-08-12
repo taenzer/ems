@@ -39,11 +39,13 @@
             <h3 class="mb-2 font-semibold">Verkaufte Tickets</h3>
             <div class="flex flex-col gap-2">
                 @forelse($events as $event)
-                    <div class="flex items-center justify-between rounded bg-slate-100 p-4">
-                        <p><strong class="font-semibold">{{ $event->name }}</strong> <br> {{ $event->dateString() }}
-                        </p>
-                        <p>{{ $event->tickets->count() }}</p>
-                    </div>
+                    <a href="{{ route('tickets.event.analytics', ['event' => $event]) }}">
+                        <div class="flex items-center justify-between rounded bg-slate-100 p-4">
+                            <p><strong class="font-semibold">{{ $event->name }}</strong> <br> {{ $event->dateString() }}
+                            </p>
+                            <p>{{ $event->tickets->count() }}</p>
+                        </div>
+                    </a>
                 @empty
                 @endforelse
             </div>

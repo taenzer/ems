@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TicketProduct;
+use App\Models\Event;
 use Illuminate\Http\Request;
 
 class TicketProductController extends Controller

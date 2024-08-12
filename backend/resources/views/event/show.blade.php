@@ -71,8 +71,8 @@
                 </div>
 
                 <div class="flex gap-2">
-                    <x-icon name="shopping-cart" size="1.3"></x-icon>
-                    <x-icon name="analytics" size="1.3"></x-icon>
+                    <a href="{{ route('tickets.orders.create', ['event' => $event]) }}"><x-icon name="shopping-cart" size="1.3"></x-icon></a>
+                    <a href="{{ route('tickets.event.analytics', ['event' => $event]) }}"><x-icon name="analytics" size="1.3"></x-icon></a>
                     <a href="{{ route('tickets.products.show', ['product' => $ticketProduct]) }}" title="Ticketdetails verwalten"><x-icon name="settings" size="1.3"></x-icon></a>
                     
                 </div>
