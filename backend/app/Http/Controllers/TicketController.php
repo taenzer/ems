@@ -59,46 +59,29 @@ class TicketController extends Controller
 
     public function analytics(Event $event)
     {
-        // First, get all TicketOrders of the Event
-        $eventTicketOrders = $event->ticketProducts->flatMap(function ($products) {
-            return $products->orders;
+        $sales = $event->tickets->map(function($ticket){
+            return collect([
+                "gateway" => $ticket->ticketOrder->gateway,
+                "ticket" => $ticket->ticketProduct->name . " - " . $ticket->ticketPrice->category
+            ]);
+        })->groupBy("gateway")->map(function($tickets){
+            return $tickets->countBy("ticket");
         });
-        // Group the orders by gateway
-        $ticketsByGateway = $eventTicketOrders->groupBy('gateway')
-            // Now map over all orders to get the Tickets
-            ->map(function ($orders) use ($event) {
-                // Extract the Tickets of the order
-                return $orders->flatMap(function ($order) use ($event) {
-                    return $order->tickets->filter(function ($ticket) use ($event) {
-                        return $ticket->validate($event)["ticketValidationResult"] != "notForThisEvent";
-                    });
-                })
-                    // Group them by TicketPrice and TicketProduct
-                    ->groupBy(function ($ticket) {
-                        return $ticket->ticket_product_id . "-" . $ticket->ticket_price_id;
-                    })
-                    // Map over them to calculate counts
-                    ->map(function ($tickets) use ($event) {
-                        return [
-                            "ticket_product" => $tickets->first()->ticketProduct,
-                            "ticket_price" => $tickets->first()->ticketPrice,
-                            // Tickets Sold = trivial
-                            "tickets_sold" => $tickets->count(),
-                            // Get Ticket Checkins of the ticket, filter and count them
-                            "tickets_checkins" => $tickets->flatMap(function ($ticket) use ($event) {
-                                // filter because we only want checkins of the selected event
-                                return $ticket->checkins->filter(function ($checkin) use ($event) {
-                                    return $checkin->event_id == $event->id;
-                                });
-                            })->count()
-                        ];
-                    })
-                ;
+
+        $checkins = $event->checkedInTickets->map(function($ticket){
+            return collect(["gateway" => $ticket->ticketOrder->gateway, "ticket" => $ticket->ticketProduct->name . " - " . $ticket->ticketPrice->category]);
+        })->groupBy("gateway")->map(function ($tickets) {
+            return $tickets->countBy("ticket");
+        });
+
+        $ticketStatsByGateway = $sales->map(function($sales, $gateway) use ($checkins){
+            return $sales->map(function($saleCount, $ticket) use ($checkins, $gateway){
+                $checkinsCount = data_get($checkins, $gateway.".".$ticket, 0);
+                return collect(["sells" => $saleCount, "checkins" => $checkinsCount]);
             });
+        });
 
-
-
-        return view('ticket.analytics', ["event" => $event, "ticketsByGateway" => $ticketsByGateway]);
+        return view('ticket.analytics', ["event" => $event, "ticketStatsByGateway" => $ticketStatsByGateway]);
     }
 
     /**

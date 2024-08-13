@@ -18,15 +18,15 @@
                 </thead>
                 
                 <tbody>
-                    @foreach($ticketsByGateway as $gateway => $ticketPrices)
-                        @foreach($ticketPrices as $ticket_price_id => $ticketStats)
+                    @foreach($ticketStatsByGateway as $gateway => $tickets)
+                        @foreach($tickets as $ticket => $ticketStats)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             @if($loop->first)
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" rowspan="{{ $ticketPrices->count() }}">{{ $gateway }}</th>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" rowspan="{{ $tickets->count() }}">{{ $gateway }}</th>
                             @endif
-                            <td class="px-6 py-4">{{ $ticketStats["ticket_product"]->name }} - {{ $ticketStats["ticket_price"]->category }}</td>
-                            <td class="px-6 py-4">{{ $ticketStats["tickets_sold"] }}</td>
-                            <td class="px-6 py-4">{{ $ticketStats["tickets_checkins"] }}</td>
+                            <td class="px-6 py-4">{{ $ticket }}</td>
+                            <td class="px-6 py-4">{{ $ticketStats["sells"] }}</td>
+                            <td class="px-6 py-4">{{ $ticketStats["checkins"] }}</td>
                         </tr>
                         @endforeach
                     @endforeach
@@ -35,13 +35,13 @@
                     <tr class="font-semibold text-gray-900 dark:text-white">
                         <th scope="row" class="px-6 py-3 text-base" colspan="2">Summe</th>
                         <td class="px-6 py-3">{{ 
-                            $ticketsByGateway->map(function($tickets){
-                                return $tickets->sum('tickets_sold');
+                            $ticketStatsByGateway->map(function($tickets){
+                                return $tickets->sum('sells');
                             })->sum()
                         }}</td>
                         <td class="px-6 py-3">{{ 
-                            $ticketsByGateway->map(function($tickets){
-                                return $tickets->sum('tickets_checkins');
+                            $ticketStatsByGateway->map(function($tickets){
+                                return $tickets->sum('checkins');
                             })->sum()
                         }}</td>
                     </tr>
