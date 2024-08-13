@@ -75,4 +75,8 @@ class Event extends Model
     {
         return $this->hasManyThrough(User::class, Order::class, "event_id", "id", "user_id", "id");
     }
+
+    public function checkedInTickets(){
+        return $this->hasManyThrough(Ticket::class, TicketCheckin::class, "event_id", "id", "id", "ticket_id");
+    }
 }
