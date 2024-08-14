@@ -59,29 +59,47 @@ class TicketController extends Controller
 
     public function analytics(Event $event)
     {
-        $sales = $event->tickets->map(function($ticket){
+        $sales = $event->tickets->map(function ($ticket) {
             return collect([
                 "gateway" => $ticket->ticketOrder->gateway,
                 "ticket" => $ticket->ticketProduct->name . " - " . $ticket->ticketPrice->category
             ]);
-        })->groupBy("gateway")->map(function($tickets){
+        })->groupBy("gateway")->map(function ($tickets) {
             return $tickets->countBy("ticket");
         });
 
-        $checkins = $event->checkedInTickets->map(function($ticket){
+        $checkins = $event->checkedInTickets->map(function ($ticket) {
             return collect(["gateway" => $ticket->ticketOrder->gateway, "ticket" => $ticket->ticketProduct->name . " - " . $ticket->ticketPrice->category]);
         })->groupBy("gateway")->map(function ($tickets) {
             return $tickets->countBy("ticket");
         });
 
-        $ticketStatsByGateway = $sales->map(function($sales, $gateway) use ($checkins){
-            return $sales->map(function($saleCount, $ticket) use ($checkins, $gateway){
-                $checkinsCount = data_get($checkins, $gateway.".".$ticket, 0);
+        $ticketStatsByGateway = $sales->map(function ($sales, $gateway) use ($checkins) {
+            return $sales->map(function ($saleCount, $ticket) use ($checkins, $gateway) {
+                $checkinsCount = data_get($checkins, $gateway . "." . $ticket, 0);
                 return collect(["sells" => $saleCount, "checkins" => $checkinsCount]);
             });
         });
 
-        return view('ticket.analytics', ["event" => $event, "ticketStatsByGateway" => $ticketStatsByGateway]);
+        $ticketSaleStats = $event->tickets->map(function ($ticket) {
+            return collect([
+                "ticket" => $ticket->ticketProduct->name . " - " . $ticket->ticketPrice->category,
+                "ticket_price" => $ticket->ticketPrice->price,
+                "boxoffice_fee" => $ticket->boxoffice_fee
+            ]);
+        })->groupBy('ticket')->map(function ($tickets) {
+            return $tickets->groupBy("boxoffice_fee")->map(function ($fee) {
+                return collect([
+                    "count" => $fee->count(),
+                    "price" => $fee->first()["ticket_price"],
+                    "sum" => $fee->sum("ticket_price"),
+                ]);
+            });
+        });
+
+        // dd($ticketSaleStats);
+
+        return view('ticket.analytics', ["event" => $event, "ticketStatsByGateway" => $ticketStatsByGateway, "ticketSaleStats" => $ticketSaleStats]);
     }
 
     /**
