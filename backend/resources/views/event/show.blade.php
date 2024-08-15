@@ -177,45 +177,15 @@
         </x-body-box>
 
         <x-body-box>
-            <div class="mb-4 flex items-center justify-between">
-                <h3 class="mb-2 font-semibold">Verkäufe</h3>
+            <div class=" flex items-center justify-between">
+                <h3 class="font-semibold">Verkaufsstatistik</h3>
                 <x-secondary-button x-data="{}"
                     x-on:click.prevent="$dispatch('open-modal', 'generate-report');">Bericht</x-secondary-button>
             </div>
 
 
-            @if ($orders->isNotEmpty())
-                <div class="flex flex-col gap-2">
-                    @foreach ($orders as $order)
-                        <div class="rounded-sm bg-slate-100 p-4" x-data="{ expanded: false }" @click="expanded = !expanded">
-                            <div class="flex cursor-pointer items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <p class="text-lg font-semibold">#{{ $order->id }}</p>
-                                    <div>
-                                        <p class="text-xs">{{ $order->created_at }}</p>
-                                        <p><strong>{{ $order->items->count() }}</strong> Positionen</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span style="font-size: 0.6rem;"
-                                        class="rounded-lg bg-gray-200 px-2 py-1 font-bold uppercase leading-none text-gray-600">{{ $order->gateway }}</span>
-                                    <span>@money($order->total)</span>
-                                </div>
-                            </div>
-                            <div class="mt-4 border-t border-solid border-gray-200 pt-2" x-show="expanded">
-                                @foreach ($order->items as $item)
-                                    <div class="flex items-center justify-between gap-4 p-2">
-                                        <span>{{ $item->quantity }}x {{ $item->name }} (je @money($item->price))</span>
-                                        <span>@money($item->itemTotal)</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
-
-
-                </div>
-                <div class="mt-4">{{ $orders->links() }} </div>
+            @if ($orderStatsByGateway->isNotEmpty())
+                <livewire:order-stats-display :orderStatsByGateway="$orderStatsByGateway"/>
             @else
                 <div class="flex flex-col items-center justify-center gap-2 bg-slate-100 p-6">
                     <p>Es wurden noch keine Produkte verkauft</p>

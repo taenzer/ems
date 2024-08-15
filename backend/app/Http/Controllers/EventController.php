@@ -98,11 +98,28 @@ class EventController extends Controller
 
         // dd(request()->attributes->get("permission"));
         $prods = $event->products()->orderByPivot("prio", "desc")->get();
+
+        $orders = $event->orders;
+        $orderStatsByGateway = $orders->groupBy("gateway")->map(function ($orders) {
+            $items = $orders->flatMap(function ($order) {
+                return $order->items;
+            });
+            return collect([
+                "items" => $items->count(),
+                "total" => $items->sum("itemTotal"),
+                "avg_total" => $orders->avg("total"),
+                "orders" => $orders->count(),
+                "bestseller" => $items->groupBy("name")->map(function ($item) {
+                    return $item->sum("quantity");
+                })->sortDesc()
+            ]);
+        });
         return view('event.show', [
             'event' => $event,
             'products' => $prods,
             'product_sets' => $prods->sortBy("type")->groupBy("type"),
             'orders' => $event->orders()->orderBy('created_at', 'desc')->with('items')->paginate(5),
+            'orderStatsByGateway' => $orderStatsByGateway,
             'permission' => 2,
             'ticketProducts' => $event->ticketProducts,
         ]);
