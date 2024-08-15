@@ -92,7 +92,7 @@ class TicketController extends Controller
                 return collect([
                     "count" => $fee->count(),
                     "price" => $fee->first()["ticket_price"],
-                    "sum" => $fee->sum("ticket_price"),
+                    "sum" => $fee->sum("ticket_price") + $fee->sum("boxoffice_fee"),
                 ]);
             });
         });
