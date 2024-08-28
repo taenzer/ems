@@ -1,6 +1,6 @@
 
 <div class="vinfo">
-    <h1>Verkaufsbericht</h1>
+    <h1>Verkaufsbericht POS</h1>
     <p><strong>Veranstaltung:</strong> {{ $event->name }} ({{ $event->datestring() }})</p>
     <p><strong>Gateways:</strong> <span class="uppercase">{{ implode(', ', $gateways) }}</span></p>
 </div>
@@ -8,12 +8,11 @@
 <table class="stats">
 <thead>
 <tr>
-<th>EMS Produkt ID</th>
-<th>Produkt Name</th>
-<th>Anz. Verkäufe</th>
-<th>VK Preise<br>
+<th style="text-align: left;">Produkt Name</th>
+<th>Verkäufe<br>
 <table class="priceTable"><tr><td>Anz.</td><td>Preis</td></tr></table>
 </th>
+<th>Summe Verkäufe</th>
 <th class="right">Umsatz</th>
 </tr>
 
@@ -21,9 +20,7 @@
 <tbody>
 @foreach ($orderItems as $orderItem)
     <tr>
-        <td>{{ $orderItem["product"]->id}}</td>
         <td>{{ $orderItem["product"]->name}}</td>
-        <td>{{ $orderItem["prices"]->sum() }}</td>
         <td class="prices">
         <table class="priceTable">
             @foreach ($orderItem["prices"] as $price => $count)
@@ -33,9 +30,8 @@
                 </tr>
             @endforeach
         </table>
-        
-        
         </td>
+        <td style="width: 10%; text-align: center;">{{ $orderItem["prices"]->sum() }}</td>
         <td class="right">@money($orderItem["salesVolume"])</td>
     </tr>
 @endforeach
@@ -85,7 +81,7 @@
     }
 
     .stats td.prices{
-        width: 25%;
+        width: 30%;
     }
 
     .stats{
