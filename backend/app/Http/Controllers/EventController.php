@@ -95,7 +95,8 @@ class EventController extends Controller
                 "total" => $items->sum("itemTotal"),
                 "avg_total" => $orders->avg("total"),
                 "orders" => $orders->count(),
-                "bestseller" => $items->groupBy("name")->map(function ($item) {
+                // We only want bestsellers with positive price
+                "bestseller" => $items->where("price", ">", 0)->groupBy("name")->map(function ($item) {
                     return $item->sum("quantity");
                 })->sortDesc()
             ]);
