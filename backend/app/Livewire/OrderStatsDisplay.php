@@ -55,4 +55,8 @@ class OrderStatsDisplay extends Component
             return $carry;
         }));
     }
+
+    public function selectedGatewayCount(){
+        return collect($this->selectedGateways)->filter(function($gateway){ return $gateway; })->count();
+    }
 }
