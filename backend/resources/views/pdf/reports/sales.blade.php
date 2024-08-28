@@ -5,45 +5,43 @@
     <p><strong>Gateways:</strong> <span class="uppercase">{{ implode(', ', $gateways) }}</span></p>
 </div>
 
+<table class="stats">
+<thead>
+<tr>
+<th>EMS Produkt ID</th>
+<th>Produkt Name</th>
+<th>Anz. Verkäufe</th>
+<th>VK Preise<br>
+<table class="priceTable"><tr><td>Anz.</td><td>Preis</td></tr></table>
+</th>
+<th class="right">Umsatz</th>
+</tr>
 
-@foreach ($orderItems as $id => $items)
-    <div class="item">
-
-        <table>
-            <tr>
-                <td class="total grow">
-                    @if (!empty($id))
-                    @php
-                        $prod = App\Models\Product::find($id);
-                    @endphp
-                        @if(isset($prod))
-                            {{ $prod->name }}
-                        @else
-                            <em>Unbekanntes Produkt</em>
-                        @endif
-                    @else
-                        Verschiedenes
-                    @endif
-                </td>
-                <td class="right tableright shrink"><span class="stattitle">Summe Anzahl:</span><br><span
-                        class="total">{{ $items['totalQuantity'] }}</span></td>
-                <td class="right tableright border-left shrink"><span class="stattitle">Summe Umsatz:</span><br><span
-                        class="total">@money($items['totalItemTotal'])</span></td>
-            </tr>
-
-        </table>
-        <hr>
-        <div class="datail">
-            @foreach ($items['grouped'] as $groups)
-                @foreach ($groups as $subitem)
-                    <p class="vitem">{{ $subitem['quantity'] }}x {{ $subitem['name'] }} (je @money($subitem['price'])) =
-                        @money($subitem['itemTotal'])</p>
-                @endforeach
+</thead>
+<tbody>
+@foreach ($orderItems as $orderItem)
+    <tr>
+        <td>{{ $orderItem["product"]->id}}</td>
+        <td>{{ $orderItem["product"]->name}}</td>
+        <td>{{ $orderItem["prices"]->sum() }}</td>
+        <td class="prices">
+        <table class="priceTable">
+            @foreach ($orderItem["prices"] as $price => $count)
+                <tr>
+                    <td>{{ $count }}</td>
+                    <td>@money($price)</td>
+                </tr>
             @endforeach
-
-        </div>
-    </div>
+        </table>
+        
+        
+        </td>
+        <td class="right">@money($orderItem["salesVolume"])</td>
+    </tr>
 @endforeach
+</tbody>
+</table>
+
 
 <div class="item summary-wrp">
 <table class="summary">
@@ -55,12 +53,13 @@
     </tr>
 
     <tr>   
-        <td class="total">{{ $eventQty }}</td>
-        <td class="total">@money($eventTotal)</td>
+        <td class="total">{{ $orderItems->sum("itemsSold") }}</td>
+        <td class="total">@money($orderItems->sum("salesVolume"))</td>
     </tr>
 
 </table>
 </div>
+
 
 <p class="stattitle gray" style="margin-top: 10px;">Bericht generiert am {{ date("d.m.Y H:i:s") }} Uhr vom Event Management System.</p>
 <p class="stattitle gray">Fingerprint: {{ hash("md5", $orderItems) }}</p>
@@ -68,6 +67,66 @@
 
 
 <style>
+    .stats > tbody > tr > td, .stats th{
+        border: 1px solid;
+    }
+
+    .stats td{
+        padding: 3px 10px;
+    }
+
+    .stats .prices{
+        padding: 0;
+    }
+
+    .stats th{
+        padding: 3px 10px;
+        background: #efefef;
+    }
+
+    .stats td.prices{
+        width: 25%;
+    }
+
+    .stats{
+        margin-bottom: 20px;
+    }
+    
+    .stats tbody  > tr:nth-child(even){
+        background: #efefef;
+    }
+
+
+    .priceTable{
+        table-layout: fixed;
+    }
+    .priceTable td{
+        padding: 3px 10px;
+    }
+    .priceTable td:first-child{
+        border-right: 1px solid black;
+    }
+    .priceTable td:last-child{
+        text-align: right;
+    }
+
+    .priceTable tr:first-child{
+        border-bottom: 1px solid;
+    }
+
+    .priceTable tr:last-child {
+        border-bottom: 0px;
+    }
+
+    .right{
+        text-align: right;
+    }
+
+    .summary-wrp{
+        background: #efefef;
+        padding: 10px;
+        border-radius: 3px;
+    }
 
     .summary td{
         vertical-align: top;
@@ -83,6 +142,7 @@
         position: relative;
     }
 
+
     .vinfo * {
         margin: 5px 0;
     }
@@ -93,25 +153,9 @@
         text-transform: uppercase;
     }
 
-    .vitem {
-        line-height: 1.3;
-        font-style: italic;
-    }
 
     * {
         line-height: 1;
-    }
-
-    .item {
-        background: #efefef;
-        padding: 20px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        page-break-inside: avoid;
-    }
-
-    .right {
-        text-align: right;
     }
 
     .grow {
@@ -122,23 +166,14 @@
         white-space: nowrap;
     }
 
-    .tableright {
-        padding: 0px 10px;
-    }
-
     .total {
         font-weight: bold;
     }
 
-    .border-left {
-        border-left: 1px solid;
-        padding: 0px 0 0px 10px;
-    }
 
     .stattitle {
         text-transform: uppercase;
         font-size: 0.6em;
-
     }
 
     .uppercase {
@@ -146,16 +181,9 @@
     }
 
     table {
-
         width: 100%;
-
         border-collapse: collapse;
     }
-
-    table td {
-        padding: 0;
-    }
-
     p {
         margin: 0;
     }
