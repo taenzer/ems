@@ -22,21 +22,47 @@ class EventController extends Controller
             "user" => "nullable|Integer"
         ]);
 
-        $orders = $event->orders;
-        $orderItems = $orders->flatMap(function($order){
-            return $order->items;
-        })->groupBy("product_id")->map(function($items, $product_id){
-            return collect([
-                "product" => Product::find($product_id),
-                "itemsSold" => $items->sum("quantity"),
-                "prices" => $items->groupBy("price")->mapWithKeys(function($priceGroup){
-                    return [ strval($priceGroup->first()->price) => $priceGroup->sum("quantity")];
-                }),
-                "salesVolume" => $items->sum("itemTotal")
-            ]);
-        });
-        $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $orderItems, "event" => $event, "gateways" => $attributes["gateways"]));
-        return $pdf->download("report.pdf");
+        //dd($attributes["gateways"]);
+
+        if($attributes["report-type"] == "sales"){
+            $orders = $event->orders;
+            $orderItems = $orders->flatMap(function($order){
+                return $order->items;
+            })->groupBy("product_id")->map(function($items, $product_id){
+                return collect([
+                    "product" => Product::find($product_id),
+                    "itemsSold" => $items->sum("quantity"),
+                    "prices" => $items->groupBy("price")->mapWithKeys(function($priceGroup){
+                        return [ strval($priceGroup->first()->price) => $priceGroup->sum("quantity")];
+                    }),
+                    "salesVolume" => $items->sum("itemTotal")
+                ]);
+            });
+            $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $orderItems, "event" => $event, "gateways" => $attributes["gateways"]));
+            return $pdf->download("report.pdf");
+        }else if($attributes["report-type"] == "tickets"){
+            $tickets = $event->tickets->filter(function($ticket) use ($attributes){
+                return in_array($ticket->ticketOrder->gateway, $attributes["gateways"]);
+            });
+            $ticketSaleStats = $tickets->map(function ($ticket) {
+                return collect([
+                    "ticket" => $ticket->ticketProduct->name . " - " . $ticket->ticketPrice->category,
+                    "ticket_price" => $ticket->ticketPrice->price,
+                    "boxoffice_fee" => $ticket->boxoffice_fee
+                ]);
+            })->groupBy('ticket')->map(function ($tickets) {
+                return $tickets->groupBy("boxoffice_fee")->map(function ($fee) {
+                    return collect([
+                        "count" => $fee->count(),
+                        "price" => $fee->first()["ticket_price"],
+                        "sum" => $fee->sum("ticket_price") + $fee->sum("boxoffice_fee"),
+                    ]);
+                });
+            });
+            //dd($ticketSaleStats);
+            $pdf = Pdf::loadView('pdf.reports.tickets', array("ticketSaleStats" => $ticketSaleStats, "event" => $event, "gateways" => $attributes["gateways"]));
+            return $pdf->download("report.pdf");
+        }
     }
     /**
      * Display a listing of the resource.
