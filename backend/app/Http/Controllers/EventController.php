@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Product;
 use App\Models\OrderItem;
 use App\Models\Share;
 use App\Models\TicketProduct;
@@ -21,36 +22,47 @@ class EventController extends Controller
             "user" => "nullable|Integer"
         ]);
 
-        // Get and group the order items by product_id, name and price
-        $items =
-            OrderItem::with("order") // Select all OrderItems with the Order Data
-            ->whereHas('order', function ($q) use ($event) {
-                $q->where("event_id", $event->id); // Only Items of Orders of the selected Event
-            })
-            ->whereHas('order', function ($q) use ($attributes) {
-                $q->whereIn("gateway", $attributes["gateways"]); // Only Items of Orders with the given gateway
-            })
-            ->get();
-        $orderItems = $items->groupBy('product_id')
-            ->map(function ($i) {
-                return array(
-                    "totalQuantity" => $i->sum("quantity"),
-                    "totalItemTotal" => $i->sum("itemTotal"),
-                    "grouped" => $i->groupBy('name')
-                        ->map(function ($item) {
-                            $ret = $item->groupBy("price")->map(function ($ps) {
-                                return array("price" => $ps->first()->price, "name" => $ps->first()->name, "quantity" => $ps->sum("quantity"), "itemTotal" => $ps->sum("itemTotal"));
-                            });
-                            return $ret;
-                        }),
-                );
+        //dd($attributes["gateways"]);
+
+        if($attributes["report-type"] == "sales"){
+            $orders = $event->orders;
+            $orderItems = $orders->flatMap(function($order){
+                return $order->items;
+            })->groupBy("product_id")->map(function($items, $product_id){
+                return collect([
+                    "product" => Product::find($product_id),
+                    "itemsSold" => $items->sum("quantity"),
+                    "prices" => $items->groupBy("price")->mapWithKeys(function($priceGroup){
+                        return [ strval($priceGroup->first()->price) => $priceGroup->sum("quantity")];
+                    }),
+                    "salesVolume" => $items->sum("itemTotal")
+                ]);
             });
-
-        /* Never Change a running System... not shure how it works, but it works! */
-
-
-        $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $orderItems, "event" => $event, "gateways" => $attributes["gateways"], "eventTotal" => $items->sum("itemTotal"), "eventQty" => $items->sum("quantity")));
-        return $pdf->download("report.pdf");
+            $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $orderItems, "event" => $event, "gateways" => $attributes["gateways"]));
+            return $pdf->download("report.pdf");
+        }else if($attributes["report-type"] == "tickets"){
+            $tickets = $event->tickets->filter(function($ticket) use ($attributes){
+                return in_array($ticket->ticketOrder->gateway, $attributes["gateways"]);
+            });
+            $ticketSaleStats = $tickets->map(function ($ticket) {
+                return collect([
+                    "ticket" => $ticket->ticketProduct->name . " - " . $ticket->ticketPrice->category,
+                    "ticket_price" => $ticket->ticketPrice->price,
+                    "boxoffice_fee" => $ticket->boxoffice_fee
+                ]);
+            })->groupBy('ticket')->map(function ($tickets) {
+                return $tickets->groupBy("boxoffice_fee")->map(function ($fee) {
+                    return collect([
+                        "count" => $fee->count(),
+                        "price" => $fee->first()["ticket_price"],
+                        "sum" => $fee->sum("ticket_price") + $fee->sum("boxoffice_fee"),
+                    ]);
+                });
+            });
+            //dd($ticketSaleStats);
+            $pdf = Pdf::loadView('pdf.reports.tickets', array("ticketSaleStats" => $ticketSaleStats, "event" => $event, "gateways" => $attributes["gateways"]));
+            return $pdf->download("report.pdf");
+        }
     }
     /**
      * Display a listing of the resource.
@@ -109,7 +121,8 @@ class EventController extends Controller
                 "total" => $items->sum("itemTotal"),
                 "avg_total" => $orders->avg("total"),
                 "orders" => $orders->count(),
-                "bestseller" => $items->groupBy("name")->map(function ($item) {
+                // We only want bestsellers with positive price
+                "bestseller" => $items->where("price", ">", 0)->groupBy("name")->map(function ($item) {
                     return $item->sum("quantity");
                 })->sortDesc()
             ]);

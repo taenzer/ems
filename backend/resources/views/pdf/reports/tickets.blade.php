@@ -1,6 +1,6 @@
 
 <div class="vinfo">
-    <h1>Verkaufsbericht POS</h1>
+    <h1>Verkaufsbericht Tickets</h1>
     <p><strong>Veranstaltung:</strong> {{ $event->name }} ({{ $event->datestring() }})</p>
     <p><strong>Gateways:</strong> <span class="uppercase">{{ implode(', ', $gateways) }}</span></p>
 </div>
@@ -8,31 +8,29 @@
 <table class="stats">
 <thead>
 <tr>
-<th style="text-align: left;">Produkt Name</th>
+<th style="text-align: left;">Ticket</th>
 <th>Verkäufe<br>
 <table class="priceTable"><tr><td>Anz.</td><td>Preis</td></tr></table>
 </th>
-<th>Summe Verkäufe</th>
 <th class="right">Umsatz</th>
 </tr>
 
 </thead>
 <tbody>
-@foreach ($orderItems as $orderItem)
+@foreach ($ticketSaleStats as $ticket => $ticketPrices)
     <tr>
-        <td>{{ $orderItem["product"]->name}}</td>
+        <td style="width: 50%;">{{ $ticket }}</td>
         <td class="prices">
-        <table class="priceTable">
-            @foreach ($orderItem["prices"] as $price => $count)
-                <tr>
-                    <td>{{ $count }}</td>
-                    <td>@money($price)</td>
-                </tr>
-            @endforeach
-        </table>
+            <table class="priceTable">
+                @foreach ($ticketPrices as $priceData)
+                    <tr>
+                        <td>{{ $priceData["count"] }}</td>
+                        <td>@money($priceData["price"])</td>
+                    </tr>
+                @endforeach
+            </table>
         </td>
-        <td style="width: 10%; text-align: center;">{{ $orderItem["prices"]->sum() }}</td>
-        <td class="right">@money($orderItem["salesVolume"])</td>
+        <td class="right">@money($ticketPrices->sum("sum"))</td>
     </tr>
 @endforeach
 </tbody>
@@ -43,14 +41,14 @@
 <table class="summary">
 
     <tr>
-        <td rowspan="2"><span class="total">Zusammenfassung</span><br><span class="stattitle">Gateways: {{ implode(', ', $gateways) }}</span></td>
-        <td class="stattitle">Verkaufte Produkte</td>
+        <td rowspan="2" style="vertical-align: center;"><span class="total">Zusammenfassung</span><br><span class="stattitle">Gateways: {{ implode(', ', $gateways) }}</span></td>
+        <td class="stattitle">Verkaufte Tickets</td>
         <td class="stattitle">Summe Umsatz</td>
     </tr>
 
     <tr>   
-        <td class="total">{{ $orderItems->sum("itemsSold") }}</td>
-        <td class="total">@money($orderItems->sum("salesVolume"))</td>
+        <td class="total">{{ $ticketSaleStats->map(function($ticketPrices){ return $ticketPrices->sum("count"); })->sum() }}</td>
+        <td class="total">@money($ticketSaleStats->map(function($ticketPrices){ return $ticketPrices->sum("sum"); })->sum())</td>
     </tr>
 
 </table>
@@ -58,7 +56,7 @@
 
 
 <p class="stattitle gray" style="margin-top: 10px;">Bericht generiert am {{ date("d.m.Y H:i:s") }} Uhr vom Event Management System.</p>
-<p class="stattitle gray">Fingerprint: {{ hash("md5", $orderItems) }}</p>
+<p class="stattitle gray">Fingerprint: {{ hash("md5", $ticketSaleStats) }}</p>
 
 
 
@@ -81,7 +79,7 @@
     }
 
     .stats td.prices{
-        width: 30%;
+        width: 25%;
     }
 
     .stats{

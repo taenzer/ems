@@ -19,7 +19,7 @@
                             </p>
                             <div class="flex items-center gap-4">
                                 @foreach ($gateways as $gw)
-                                    <x-input.checkbox name="selectedGateways.{{$gw}}" wire:model.live="selectedGateways.{{$gw}}" value="{{ $gw }}"><span
+                                    <x-input.checkbox name="reportGenerator.selectedGateways.{{$gw}}" wire:model.live="selectedGateways.{{$gw}}" value="{{ $gw }}"><span
                                             class="uppercase">{{ $gw }}</span></x-input.checkbox>
                                 @endforeach
                             </div>
