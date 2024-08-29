@@ -55,11 +55,11 @@ class EventController extends Controller
                     return collect([
                         "count" => $fee->count(),
                         "price" => $fee->first()["ticket_price"],
+                        "fee" => $fee->first()["boxoffice_fee"],
                         "sum" => $fee->sum("ticket_price") + $fee->sum("boxoffice_fee"),
                     ]);
                 });
             });
-            //dd($ticketSaleStats);
             $pdf = Pdf::loadView('pdf.reports.tickets', array("ticketSaleStats" => $ticketSaleStats, "event" => $event, "gateways" => $attributes["gateways"]));
             return $pdf->download("report.pdf");
         }
