@@ -25,7 +25,7 @@
                 @foreach ($ticketPrices as $priceData)
                     <tr>
                         <td>{{ $priceData["count"] }}</td>
-                        <td>@money($priceData["price"])</td>
+                        <td>@money($priceData["price"] + $priceData["fee"])</td>
                     </tr>
                 @endforeach
             </table>

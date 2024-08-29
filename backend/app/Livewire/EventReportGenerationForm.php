@@ -33,9 +33,10 @@ class EventReportGenerationForm extends Component
         $this->redirect(route("events.report.create", [
             "event" => $this->event,
             "report-type" => $this->reportType,
-            "gateways" => array_keys($this->selectedGateways),
+            "gateways" => collect($this->selectedGateways)->filter(function ($gateway) {
+                return $gateway;
+            })->keys()->toArray(),
             "user" => $this->getSelectedUser()
-
         ]));
     }
 
