@@ -25,7 +25,9 @@ class EventController extends Controller
         //dd($attributes["gateways"]);
 
         if($attributes["report-type"] == "sales"){
-            $orders = $event->orders;
+            $orders = $event->orders->filter(function($order) use ($attributes) {
+                return in_array($order->gateway, $attributes["gateways"]);
+            });
             $orderItems = $orders->flatMap(function($order){
                 return $order->items;
             })->groupBy("product_id")->map(function($items, $product_id){
@@ -39,7 +41,8 @@ class EventController extends Controller
                 ]);
             });
             $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $orderItems, "event" => $event, "gateways" => $attributes["gateways"]));
-            return $pdf->download("report.pdf");
+            $filename = "ems-report-{$event->date}-" . strtolower(preg_replace('/\s+/', '', $event->name)) . "-sales-" . implode("-", $attributes['gateways']) . ".pdf";
+            return $pdf->download($filename);
         }else if($attributes["report-type"] == "tickets"){
             $tickets = $event->tickets->filter(function($ticket) use ($attributes){
                 return in_array($ticket->ticketOrder->gateway, $attributes["gateways"]);
@@ -61,7 +64,8 @@ class EventController extends Controller
                 });
             });
             $pdf = Pdf::loadView('pdf.reports.tickets', array("ticketSaleStats" => $ticketSaleStats, "event" => $event, "gateways" => $attributes["gateways"]));
-            return $pdf->download("report.pdf");
+            $filename = "ems-report-{$event->date}-" . strtolower(preg_replace('/\s+/', '', $event->name)) . "-tickets-" . implode("-", $attributes['gateways']) . ".pdf";
+            return $pdf->download($filename);
         }
     }
     /**
