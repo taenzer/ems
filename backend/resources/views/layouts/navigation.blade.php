@@ -25,8 +25,8 @@
                     <x-nav-link :href="route('tickets.dashboard')" :active="request()->routeIs('tickets.index')">
                         {{ __('Tickets') }}
                     </x-nav-link>
-                    <x-nav-link href="" :active="request()->routeIs('sales')">
-                        {{ __('Verkäufe') }}
+                    <x-nav-link :href="route('analytics.dashboard')" :active="request()->routeIs('analytics.*')">
+                        {{ __('Analytics') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -92,6 +92,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('tickets.dashboard')" :active="request()->routeIs('tickets.dashboard')">
                 {{ __('Tickets') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('analytics.dashboard')" :active="request()->routeIs('analytics.*')">
+                {{ __('Analytics') }}
             </x-responsive-nav-link>
         </div>
 
