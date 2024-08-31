@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Product;
-use App\Models\OrderItem;
-use App\Models\Share;
-use App\Models\TicketProduct;
+use App\Services\Analytics;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -15,54 +12,19 @@ class EventController extends Controller
 
     public function generateReport(Request $request, Event $event)
     {
-
         $attributes = $request->validate([
             "report-type" => "required|String",
             "gateways" => "required|Array",
             "user" => "nullable|Integer"
         ]);
 
-        //dd($attributes["gateways"]);
-
         if($attributes["report-type"] == "sales"){
-            $orders = $event->orders->filter(function($order) use ($attributes) {
-                return in_array($order->gateway, $attributes["gateways"]);
-            });
-            $orderItems = $orders->flatMap(function($order){
-                return $order->items;
-            })->groupBy("product_id")->map(function($items, $product_id){
-                return collect([
-                    "product" => Product::find($product_id),
-                    "itemsSold" => $items->sum("quantity"),
-                    "prices" => $items->groupBy("price")->mapWithKeys(function($priceGroup){
-                        return [ strval($priceGroup->first()->price) => $priceGroup->sum("quantity")];
-                    }),
-                    "salesVolume" => $items->sum("itemTotal")
-                ]);
-            });
-            $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $orderItems, "event" => $event, "gateways" => $attributes["gateways"]));
+            $productSaleStats = Analytics::getEventProductSaleStats($event, $attributes["gateways"]);
+            $pdf = Pdf::loadView('pdf.reports.sales', array("orderItems" => $productSaleStats, "event" => $event, "gateways" => $attributes["gateways"]));
             $filename = "ems-report-{$event->date}-" . strtolower(preg_replace('/\s+/', '', $event->name)) . "-sales-" . implode("-", $attributes['gateways']) . ".pdf";
             return $pdf->download($filename);
         }else if($attributes["report-type"] == "tickets"){
-            $tickets = $event->tickets->filter(function($ticket) use ($attributes){
-                return in_array($ticket->ticketOrder->gateway, $attributes["gateways"]);
-            });
-            $ticketSaleStats = $tickets->map(function ($ticket) {
-                return collect([
-                    "ticket" => $ticket->ticketProduct->name . " - " . $ticket->ticketPrice->category,
-                    "ticket_price" => $ticket->ticketPrice->price,
-                    "boxoffice_fee" => $ticket->boxoffice_fee
-                ]);
-            })->groupBy('ticket')->map(function ($tickets) {
-                return $tickets->groupBy("boxoffice_fee")->map(function ($fee) {
-                    return collect([
-                        "count" => $fee->count(),
-                        "price" => $fee->first()["ticket_price"],
-                        "fee" => $fee->first()["boxoffice_fee"],
-                        "sum" => $fee->sum("ticket_price") + $fee->sum("boxoffice_fee"),
-                    ]);
-                });
-            });
+            $ticketSaleStats = Analytics::getEventTicketSaleStats($event, $attributes["gateways"]);
             $pdf = Pdf::loadView('pdf.reports.tickets', array("ticketSaleStats" => $ticketSaleStats, "event" => $event, "gateways" => $attributes["gateways"]));
             $filename = "ems-report-{$event->date}-" . strtolower(preg_replace('/\s+/', '', $event->name)) . "-tickets-" . implode("-", $attributes['gateways']) . ".pdf";
             return $pdf->download($filename);
