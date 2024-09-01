@@ -6,6 +6,37 @@ use App\Models\Product;
 
 class Analytics {
 
+    public static function multiEventProductSaleAnalytics($events, $products, array $gateways = array()){
+        $stats = $products->flatMap(function($product, $productIndex) use ($events, $gateways){
+            return $events->map(function($event, $eventIndex) use ($product, $productIndex, $gateways) {
+                
+                $orderItems = $event->orderItems()
+                    ->where("product_id", $product->id)
+                    ->get()
+                    ->filter(function($item) use ($gateways){
+                        return empty($gateways) || in_array($item->order->gateway, $gateways);
+                    })
+                    ->groupBy("price")
+                    ->map(function($priceGroup){
+                        return collect([
+                            "itemsSold" => $priceGroup->sum("quantity"),
+                            "price" => $priceGroup->first()->price,
+                            "total" => $priceGroup->sum("itemTotal")
+                        ]);
+                    });
+                return collect([
+                    "productIndex" => $productIndex,
+                    "eventIndex" => $eventIndex,
+                    "priceCategories" => $orderItems,
+                    "itemsSoldTotal" => $orderItems->sum("itemsSold"),
+                    "total" => $orderItems->sum("total"),
+                ]);
+            });
+        });
+        //dd($stats);
+        return $stats;
+    }
+
     // TICKET ANALYTICS
 
     /**
