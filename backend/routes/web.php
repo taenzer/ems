@@ -8,8 +8,8 @@ use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TicketProductController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketOrderController;
+use App\Http\Controllers\AnalyticController;
 use App\Http\Middleware\EventOwnerOrShareOnly;
-use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/tickets/products/create', [TicketProductController::class, 'create'])->name('tickets.products.create');
     Route::get('/tickets/products/{product}', [TicketProductController::class, 'show'])->name('tickets.products.show');
     Route::get('/tickets/products/{product}/edit', [TicketProductController::class, 'edit'])->name('tickets.products.edit');
+
+    Route::get('analytics', [AnalyticController::class, 'index'])->name('analytics.dashboard');
+    Route::get('analytics/eventProductSales', [AnalyticController::class, 'eventProductSales'])->name('analytics.eventProductSales');
 });
 
 

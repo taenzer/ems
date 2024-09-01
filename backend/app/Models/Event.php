@@ -56,6 +56,10 @@ class Event extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function orderItems(){
+        return $this->hasManyThrough(OrderItem::class, Order::class);
+    }
+
     public function ticketProducts()
     {
         return $this->hasManyThrough(TicketProduct::class, TicketPermit::class, "event_id", "id", "id", "ticket_product_id");

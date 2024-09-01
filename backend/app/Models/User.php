@@ -28,9 +28,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class, 'shares', 'shared_to')->where('active', true);
     }
 
-    public function getEvents()
+    public function getEvents($onlyActive = true)
     {
-        return $this->hasMany(Event::class)->where('active', true)->get()->merge($this->sharedEvents);
+        if($onlyActive){
+            return $this->hasMany(Event::class)->where('active', true)->get()->merge($this->sharedEvents);
+        }else{
+            return $this->hasMany(Event::class)->get()->merge($this->sharedEvents);
+        } 
     }
 
     public function getEventTickets()
