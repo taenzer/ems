@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\ApiAuthController;
 use App\Http\Controllers\Api\ApiEventController;
 use App\Http\Controllers\Api\ApiOrderController;
 use App\Http\Controllers\Api\ApiProductImageController;
 use App\Http\Controllers\Api\ApiTicketController;
+use App\Http\Controllers\Api\ApiProductController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -41,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('events', ApiEventController::class);
     Route::get('events/{event}/products/tickets', [ApiEventController::class, 'getTicketProducts']);
 
+    Route::get('products', [ApiProductController::class, 'index']);
+
     Route::post('tickets', [ApiTicketController::class, 'createOrder']);
     Route::post('tickets/pdf', [ApiTicketController::class, 'getTicketPdf']);
 
@@ -60,29 +64,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-/* TODO: Refactor to own Controller? */
-Route::post(
-    '/token',
-    function (Request $request) {
-
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-            'device_name' => 'required',
-        ]);
-
-
-
-        $user = User::where('email', $request->email)->first();
-
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
-        }
-
-        return $user->createToken($request->device_name)->plainTextToken;
-    }
-);
+Route::post('/token', [ApiAuthController::class, 'token'] );
+Route::post('/login', [ApiAuthController::class, 'login']);
