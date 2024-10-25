@@ -28,7 +28,7 @@ RUN apk update && apk add --no-cache \
 
 RUN docker-php-ext-install gd pdo_sqlite pdo_mysql curl zip
 
-RUN ln -s /usr/bin/php82 /usr/bin/php
+RUN ln -sf /usr/bin/php82 /usr/bin/php
 
 # Installing composer
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
