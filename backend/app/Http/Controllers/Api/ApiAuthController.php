@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
 
@@ -30,11 +31,16 @@ class ApiAuthController extends Controller
     }
 
     function login(Request $request){
+
+        error_log($request);
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
             'device_name' => 'required',
         ]);
+
+
 
         $user = User::where('email', $request->email)->first();
 
