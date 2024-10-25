@@ -32,15 +32,12 @@ class ApiAuthController extends Controller
 
     function login(Request $request){
 
-        error_log($request);
 
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'device_name' => 'required',
+            'device_name' => 'nullable',
         ]);
-
-
 
         $user = User::where('email', $request->email)->first();
 
@@ -49,11 +46,17 @@ class ApiAuthController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
+
+        $deviceName = "Unknown";
+        if(isset($request->device_name) && !empty($request->device_name)){
+            $deviceName = $request->device_name;
+        }
+        
         return collect([
             "id" => $user->id,
             "name" => $user->name,
             "email" => $user->email,
-            "token" => $user->createToken($request->device_name)->plainTextToken
+            "token" => $user->createToken($deviceName)->plainTextToken
         ]);
     }
 }
