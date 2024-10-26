@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Order;
 use App\Models\TicketProduct;
 use App\Models\TicketPermit;
+use Illuminate\Support\Collection;
 
 class Event extends Model
 {
@@ -22,6 +23,14 @@ class Event extends Model
     {
         return Attribute::make(
             get: fn ($value) => Carbon::parse($value)->format("H:i"),
+        );
+    }
+
+    protected function memberList(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) : null | Collection => isset($value) ? collect(json_decode($value)) : null,
+            set: fn(Collection | null $value) => isset($value) ? $value->toJson() : null,
         );
     }
 

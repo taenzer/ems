@@ -36,6 +36,7 @@ class ApiOrderController extends Controller
             "*.created" => "nullable",
             "*.created_at" => "nullable",
             "*.gateway" => "required|string",
+            "*.meta" => "nullable|array",
             "*.total" => "required|numeric",
             "*.items" => "required|array",
             "*.items.*.product_id" => "required_without:*.items.*.productId",
@@ -46,6 +47,7 @@ class ApiOrderController extends Controller
             "*.items.*.itemTotal" => "required_with:*.items.*|numeric",
         ]);
         //return $attributes;
+        // foreach orders as order_data
         foreach ($attributes as $order_data) {
             $order_data['event_id'] = $order_data['eventId'] ?? $order_data['event_id'] ?? null;
             $order_data['created_at'] = $order_data['created'] ?? $order_data['created_at'] ?? null;
@@ -57,6 +59,11 @@ class ApiOrderController extends Controller
                 unset($item_data["productId"]);
                 $item_data["order_id"] = $order->id;
                 OrderItem::create($item_data);
+            }
+            if(isset($order_data["meta"])){
+                foreach($order_data["meta"] as $key => $value){
+                    $order->meta()->create(["key" => $key, "value" => $value]);
+                }
             }
         }
         response()->json([], 200);

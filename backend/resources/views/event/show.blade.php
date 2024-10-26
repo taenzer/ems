@@ -87,7 +87,10 @@
             </div>
         </x-body-box>
         <x-body-box>
-            <h3 class="mb-2 font-semibold">Produkte</h3>
+            <div class="mb-4 flex items-center justify-between">
+                <h3 class="mb-2 font-semibold">Produkte</h3>
+                <x-link-button :link="route('events.products.settings', ['event' => $event])"><x-icon name="tune"/></x-link-button>
+            </div>
 
             @if ($product_sets->isNotEmpty())
 

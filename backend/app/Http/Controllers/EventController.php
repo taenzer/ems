@@ -35,9 +35,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        $shares = auth()->user()->sharedEvents;
         return view('event.index', [
-            'events' => Event::where('user_id', auth()->user()->id)->get()->merge($shares)->sortByDesc('date'),
+            'events' => auth()->user()->getEvents(false),
         ]);
     }
 
@@ -146,5 +145,9 @@ class EventController extends Controller
         return redirect(route("events.show", [
             "event" => $event
         ]));
+    }
+
+    public function advancedProductSettings(Event $event){
+        return view("event.product-settings", ["event" => $event]);
     }
 }

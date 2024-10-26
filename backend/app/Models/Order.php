@@ -19,6 +19,10 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function meta(){
+        return $this->hasMany(OrderMeta::class);
+    }
+
     public function event(){
         return $this->belongsTo(Event::class);
     }

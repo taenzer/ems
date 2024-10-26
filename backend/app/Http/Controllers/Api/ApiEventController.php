@@ -15,14 +15,13 @@ class ApiEventController extends Controller
      */
     public function index()
     {
-        $query = Event::select(['id', 'name', 'date', 'time'])
-            ->where('user_id', auth()->user()->id)->where('active', true)->orderBy('date', 'asc');
-
-        if (request()->has('withProducts')) {
-            return new EventCollection($query->with("products")->get());
-        }
-
-        return $query->get();
+        return auth()->user()->allAccessibleEvents(false)
+        ->orderBy('date', 'asc')
+        ->get()
+        ->map(function ($event) {
+            unset($event->created_at, $event->updated_at, $event->active, $event->user_id); // Entferne bestimmte Attribute
+            return $event;
+        });
     }
 
     public function getTicketProducts(Event $event)

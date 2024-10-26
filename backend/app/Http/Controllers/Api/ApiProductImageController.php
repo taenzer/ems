@@ -12,13 +12,14 @@ class ApiProductImageController extends Controller
     // Output all Product Images of active Events as ZIP File
     public function index(){
 
-        $images = Product::whereHas('events', function(Builder $query){
-            $query->where('active', 1);
-        })->get()->pluck("image");
+        // Get all event id's of users active events
+        $images = auth()->user()->getEvents()->flatMap(function($event){
+            return $event->products()->where("image", "!=", null)
+            ->pluck("image");
+        })->unique();
 
-        if($images->isEmpty()){
-            return response()->json(['message' => 'No images available for download!'], 404);
-        }
+        //$images = [];
+
 
         $zip_file = storage_path('product-images.zip');
 
@@ -30,6 +31,10 @@ class ApiProductImageController extends Controller
                 continue;
             }
            $zip->addFile(storage_path("app/public/$image_path"), basename($image_path));
+        }
+
+        if(empty($images)){
+            $zip->addEmptyDir(".");
         }
         
         $zip->close();
