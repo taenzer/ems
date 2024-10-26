@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('events', EventController::class)->middleware(EventOwnerOrShareOnly::class);
     Route::put("events/{event}/status", [EventController::class, 'toggleStatus'])->name("events.status.toggle")->middleware(EventOwnerOrShareOnly::class);
     Route::get("events/{event}/report", [EventController::class, 'generateReport'])->name("events.report.create")->middleware(EventOwnerOrShareOnly::class);
+    Route::get('events/{event}/products/settings/', [EventController::class, 'advancedProductSettings'])->name("events.products.settings")->middleware(EventOwnerOrShareOnly::class);
+    
     Route::resource('products', ProductController::class);
 
     Route::get('events/{event}/products/add', [EventProductLinkController::class, 'create'])->name("events.products.add")->middleware(EventOwnerOrShareOnly::class);

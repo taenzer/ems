@@ -147,4 +147,8 @@ class EventController extends Controller
             "event" => $event
         ]));
     }
+
+    public function advancedProductSettings(Event $event){
+        return view("event.product-settings", ["event" => $event]);
+    }
 }

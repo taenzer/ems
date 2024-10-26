@@ -15,7 +15,7 @@ class ApiEventController extends Controller
      */
     public function index()
     {
-        $query = Event::select(['id', 'name', 'date', 'time'])
+        $query = Event::select(['id', 'name', 'date', 'time', 'member_list'])
             ->where('user_id', auth()->user()->id)->where('active', true)->orderBy('date', 'asc');
 
         if (request()->has('withProducts')) {
