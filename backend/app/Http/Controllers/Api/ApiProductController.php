@@ -2,13 +2,11 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 
-use App\Models\Event;
-
-
 class ApiProductController extends Controller{
 
     public function index(){
-        $events = Event::where("active", "1")->get();
+        $events = auth()->user()->getEvents(true);
+
         $products = $events->flatMap(function($event){
             $prods = $event->products()->orderByPivot("prio", "desc")->get();
             return $prods->map(function ($prod) {

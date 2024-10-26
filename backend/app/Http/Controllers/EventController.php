@@ -35,9 +35,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        $shares = auth()->user()->sharedEvents;
         return view('event.index', [
-            'events' => Event::where('user_id', auth()->user()->id)->get()->merge($shares)->sortByDesc('date'),
+            'events' => auth()->user()->getEvents(false),
         ]);
     }
 

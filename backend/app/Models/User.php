@@ -23,18 +23,25 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function events(){
+        return $this->hasMany(Event::class);
+    }
     public function sharedEvents()
     {
-        return $this->belongsToMany(Event::class, 'shares', 'shared_to')->where('active', true);
+        return $this->belongsToMany(Event::class, 'shares', 'shared_to');
     }
 
-    public function getEvents($onlyActive = true)
+    public function allAccessibleEvents($onlyActive = true)
     {
         if($onlyActive){
-            return $this->hasMany(Event::class)->where('active', true)->get()->merge($this->sharedEvents);
+            return $this->events()->where("active", true)->union($this->sharedEvents()->where("active", true)->select("events.*"));
         }else{
-            return $this->hasMany(Event::class)->get()->merge($this->sharedEvents);
-        } 
+            return $this->events()->union($this->sharedEvents()->select("events.*"));
+        }
+    }
+
+    public function getEvents($onlyActive = true){
+        return $this->allAccessibleEvents($onlyActive)->orderBy('date', 'asc')->get();
     }
 
     public function getEventTickets()
