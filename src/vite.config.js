@@ -10,7 +10,11 @@ export default defineConfig({
     ],
     server: {
         host: "0.0.0.0", // Erlaubt Zugriff von außerhalb des Containers
-        port: 5173, // Setzt den Port auf 5173 (oder einen anderen offenen Port)
-        origin: "http://localhost:5173", // Setzt die Basis-URL für Assets
+        port: 5173, // Setzt den Port auf 5173
+        origin: "http://localhost:5173", // URL, die der Browser verwenden soll
+        hmr: {
+            host: "localhost", // Adresse, die der Browser für HMR verwendet
+            port: 5173, // Port für HMR (sollte derselbe wie `server.port` sein)
+        },
     },
 });

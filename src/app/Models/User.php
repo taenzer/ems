@@ -34,9 +34,9 @@ class User extends Authenticatable
     public function allAccessibleEvents($onlyActive = true)
     {
         if($onlyActive){
-            return $this->events()->where("active", true)->union($this->sharedEvents()->where("active", true)->select("events.*"));
+            return $this->events()->where("active", true)->union($this->sharedEvents()->where("active", true)->select("events.*"))->orderByDesc("date");
         }else{
-            return $this->events()->union($this->sharedEvents()->select("events.*"));
+            return $this->events()->union($this->sharedEvents()->select("events.*"))->orderByDesc("date");
         }
     }
 

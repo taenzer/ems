@@ -184,6 +184,8 @@
                 <h3 class="font-semibold">Verkaufsstatistik</h3>
                 <x-secondary-button x-data="{}"
                     x-on:click.prevent="$dispatch('open-modal', 'generate-report');">Bericht</x-secondary-button>
+                <x-secondary-button x-data="{}"
+                    x-on:click.prevent="$dispatch('open-modal', 'generate-report');">asdasdasd</x-secondary-button>
             </div>
 
 
