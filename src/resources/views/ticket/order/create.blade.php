@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-header heading="Neue Ticketbestellung">
             <x-slot name="beforeHeading">
-                <a href="{{ route('tickets.orders.index') }}"><x-icon name="chevron-left"></x-icon></a>
+                <a href="{{ route('tickets.orders.index') }}"><x-misc.icon name="chevron-left"></x-misc.icon></a>
             </x-slot>
         </x-header>
     </x-slot>

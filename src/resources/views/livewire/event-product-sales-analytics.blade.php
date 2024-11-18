@@ -24,9 +24,9 @@
             <div class="row-start-{{ $stat['productIndex'] + 2 }} col-start-{{ $stat['eventIndex'] + 2 }} {{ $cellclasses }} hovercell">
 
                 <p class="flex items-center gap-2 mb-2">
-                    <span class="flex items-center gap-1 bg-slate-300 px-2 rounded-full" title="Anzahl verkauft"><x-icon name="grain"/> {{ $stat['itemsSoldTotal'] }} </span>
-                    <span class="flex items-center gap-1 bg-slate-300 px-2 rounded-full" title="Umsatz"><x-icon name="payments"/> @money($stat['total']) </span>
-                    <span class="flex items-center gap-1 bg-slate-300 px-2 rounded-full" title="Preiskategorien"><x-icon name="category"/> {{ count($stat['priceCategories']) }}</span>
+                    <span class="flex items-center gap-1 bg-slate-300 px-2 rounded-full" title="Anzahl verkauft"><x-misc.icon name="grain"/> {{ $stat['itemsSoldTotal'] }} </span>
+                    <span class="flex items-center gap-1 bg-slate-300 px-2 rounded-full" title="Umsatz"><x-misc.icon name="payments"/> @money($stat['total']) </span>
+                    <span class="flex items-center gap-1 bg-slate-300 px-2 rounded-full" title="Preiskategorien"><x-misc.icon name="category"/> {{ count($stat['priceCategories']) }}</span>
                 </p>
                 <div class="pl-2 text-sm border-l ml-2 text-slate-600 border-l-slate-600 border-dotted">
                     @foreach ($stat["priceCategories"] as $pcat)

@@ -20,7 +20,7 @@
                 </a>
                 <span style="grid-area: 2 / 1 / 2 / 1" class="text-xs">{{ $event->dateString() }} {{ $event->timeString() }}</span>
                 <span style="grid-area: 1 / 2 / 3 / 3"><x-event-active :active="$event->active"/></span>
-                <span style="grid-area: 1 / 3 / 3 / 4">  <a href="{{ route('events.show', ['event' => $event])}}"><x-icon name="chevron-right"/></a> </span>
+                <span style="grid-area: 1 / 3 / 3 / 4">  <a href="{{ route('events.show', ['event' => $event])}}"><x-misc.icon name="chevron-right"/></a> </span>
             </div>
             
         </x-body-box>

@@ -3,7 +3,7 @@
         <x-header heading="{{ $event->name }}">
             <x-slot name="beforeHeading">
                 <a href="{{ route('events.index') }}" class="opacity-50">
-                    <x-icon name="chevron-left" />
+                    <x-misc.icon name="chevron-left" />
                 </a>
             </x-slot>
             <x-slot name="afterHeading">
@@ -21,7 +21,7 @@
                 </form>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <x-secondary-button><x-icon name="more"></x-icon></x-secondary-button>
+                        <x-secondary-button><x-misc.icon name="more"></x-misc.icon></x-secondary-button>
                     </x-slot>
 
                     <x-slot name="content">
@@ -71,9 +71,9 @@
                 </div>
 
                 <div class="flex gap-2">
-                    <a href="{{ route('tickets.orders.create', ['event' => $event]) }}"><x-icon name="shopping-cart" size="1.3"></x-icon></a>
-                    <a href="{{ route('tickets.event.analytics', ['event' => $event]) }}"><x-icon name="analytics" size="1.3"></x-icon></a>
-                    <a href="{{ route('tickets.products.show', ['product' => $ticketProduct]) }}" title="Ticketdetails verwalten"><x-icon name="settings" size="1.3"></x-icon></a>
+                    <a href="{{ route('tickets.orders.create', ['event' => $event]) }}"><x-misc.icon name="shopping-cart" size="1.3"></x-misc.icon></a>
+                    <a href="{{ route('tickets.event.analytics', ['event' => $event]) }}"><x-misc.icon name="analytics" size="1.3"></x-misc.icon></a>
+                    <a href="{{ route('tickets.products.show', ['product' => $ticketProduct]) }}" title="Ticketdetails verwalten"><x-misc.icon name="settings" size="1.3"></x-misc.icon></a>
                     
                 </div>
                     
@@ -89,7 +89,7 @@
         <x-body-box>
             <div class="mb-4 flex items-center justify-between">
                 <h3 class="mb-2 font-semibold">Produkte</h3>
-                <x-link-button :link="route('events.products.settings', ['event' => $event])"><x-icon name="tune"/></x-link-button>
+                <x-link-button :link="route('events.products.settings', ['event' => $event])"><x-misc.icon name="tune"/></x-link-button>
             </div>
 
             @if ($product_sets->isNotEmpty())
@@ -108,7 +108,7 @@
                                         <div class="flex items-center justify-between rounded bg-slate-100 px-4 py-2"
                                             x-data="{ prio: childs.length - childs.indexOf($el) }" x-init="$watch('count', function(value) { prio = childs.length - childs.indexOf($el) })">
                                             <div class="flex items-center gap-2">
-                                                <span class="handle cursor-move"><x-icon name="drag-indicator" /></span>
+                                                <span class="handle cursor-move"><x-misc.icon name="drag-indicator" /></span>
                                                 <span>{{ $product->name }}</span>
                                             </div>
 
@@ -118,7 +118,7 @@
                                                     value="{{ $product->product_data->price }}" required min="-9999"
                                                     max="9999" inputmode="numeric" />
                                                 <span x-data="{}"
-                                                    x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion'); $dispatch('select-link-to-delete', {product_id: {{ $product->id }}})"><x-icon
+                                                    x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion'); $dispatch('select-link-to-delete', {product_id: {{ $product->id }}})"><x-misc.icon
                                                         name="link-off" color="red" size="1" /></span>
                                             </div>
                                             <input type="hidden" name="products[{{ $product->id }}][prio]"
@@ -182,10 +182,14 @@
         <x-body-box>
             <div class=" flex items-center justify-between">
                 <h3 class="font-semibold">Verkaufsstatistik</h3>
-                <x-secondary-button x-data="{}"
-                    x-on:click.prevent="$dispatch('open-modal', 'generate-report');">Bericht</x-secondary-button>
-                <x-secondary-button x-data="{}"
-                    x-on:click.prevent="$dispatch('open-modal', 'generate-report');">asdasdasd</x-secondary-button>
+                <div class="flex items-center gap-2">
+                    <x-secondary-button x-data="{}"
+                        x-on:click.prevent="$dispatch('open-modal', 'generate-report');">Bericht</x-secondary-button>
+                    <a href="{{ route('events.orders.protocoll', $event) }}" title="Verkaufsprotokoll">
+                        <x-secondary-button x-data="{}"><x-misc.icon name="receipt-long" size="1"/></x-secondary-button>
+                    </a>
+                </div>
+
             </div>
 
 

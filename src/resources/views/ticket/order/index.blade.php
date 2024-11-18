@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-header heading="Ticket Bestellungen">
             <x-slot name="beforeHeading">
-                <a href="{{ route('tickets.dashboard') }}"><x-icon name="chevron-left"></x-icon></a>
+                <a href="{{ route('tickets.dashboard') }}"><x-misc.icon name="chevron-left"></x-misc.icon></a>
             </x-slot>
             <x-slot name="actions">
                 <a href="{{ route('tickets.orders.create') }}"><x-primary-button>Neue Bestellung</x-primary-button></a>
@@ -20,7 +20,7 @@
                     </div>
                     <div class="flex gap-2 items-center">
                         @money($order->total)
-                        <x-icon name="chevron-right"></x-icon>
+                        <x-misc.icon name="chevron-right"></x-misc.icon>
                     </div>
                     </div>
             </x-body-box>

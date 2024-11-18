@@ -17,7 +17,7 @@
     <div class="preview-cropped relative" style="aspect-ratio: {{ $aspect_ratio }}; width: 100%;">
         @if (!empty($src))
             <span class="absolute right-2 top-2 cursor-pointer rounded-full bg-white p-2 shadow-lg" @click="$refs.fileinput.click()">
-                <x-icon name="edit"></x-icon></span>
+                <x-misc.icon name="edit"></x-misc.icon></span>
         @endif
         <x-spinner x-show="loading"></x-spinner>
         <img :src="preview" x-show="imageUrl" class="h-full w-full">

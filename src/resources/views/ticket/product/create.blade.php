@@ -3,7 +3,7 @@
         <x-header heading="Neues Ticket Produkt erstellen">
             <x-slot name="beforeHeading">
                 <a href="{{ route('tickets.products.index') }}" class="opacity-50">
-                    <x-icon name="chevron-left" />
+                    <x-misc.icon name="chevron-left" />
                 </a>
             </x-slot>
         </x-header>

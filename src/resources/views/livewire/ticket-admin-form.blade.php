@@ -23,14 +23,14 @@
                     @if($editable)
                         <x-danger-button wire:click="removePricing('{{ $id }}')"
                             wire:confirm="Möchtest du die Preiskategorie wirklich löschen?" type="button">
-                            <x-icon name="delete" color="white" />
+                            <x-misc.icon name="delete" color="white" />
                         </x-danger-button>
                     @endif
                 </div>
             @endforeach
             @if($editable)
                 <x-secondary-button wire:click="addPricing">
-                    <x-icon name="add" /> Preiskategorie hinzufügen
+                    <x-misc.icon name="add" /> Preiskategorie hinzufügen
                 </x-secondary-button>
             @endif
 
@@ -44,7 +44,7 @@
                     @if($editable)
                         <x-danger-button wire:click="removePermit({{ $permit->id }})"
                             wire:confirm="Möchtest du die Zutrittsberechtigung wirklich löschen?" type="button">
-                            <x-icon name="delete" color="white" />
+                            <x-misc.icon name="delete" color="white" />
                         </x-danger-button>
                     @endif
                 </div>
@@ -52,7 +52,7 @@
 
             @if($editable)
             <x-secondary-button x-on:click.prevent="$dispatch('open-modal', 'select-permit');">
-                <x-icon name="add" /> Zutrittberechtigung hinzufügen
+                <x-misc.icon name="add" /> Zutrittberechtigung hinzufügen
             </x-secondary-button>
             @endif
 

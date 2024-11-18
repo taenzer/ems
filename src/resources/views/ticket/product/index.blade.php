@@ -7,7 +7,7 @@
             </x-slot>
             <x-slot name="beforeHeading">
                 <a href="{{ route('tickets.dashboard') }}" class="opacity-50">
-                    <x-icon name="chevron-left" />
+                    <x-misc.icon name="chevron-left" />
                 </a>
     </x-slot>
         </x-header>
@@ -25,7 +25,7 @@
                             <x-badge>{{ $product->permits()->count() }} Permits</x-badge>
                             <x-badge>{{ $product->prices()->count() }} Prices</x-badge>
                         </div>
-                        <span style="grid-area: 1 / 3 / 2 / 4"> <x-icon name="chevron-right" /></span>
+                        <span style="grid-area: 1 / 3 / 2 / 4"> <x-misc.icon name="chevron-right" /></span>
                     </div>
                 </x-body-box></a>
         @endforeach

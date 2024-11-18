@@ -23,7 +23,7 @@
                             </a>
 
                             <span style="grid-area: 1 / 2 / 2 / 3" class="cursor-default">@money($product->default_price)</span>
-                            <span style="grid-area: 1 / 3 / 2 / 4">  <a href="{{ route('products.show', ['product' => $product])}}"><x-icon name="chevron-right"/></a> </span>
+                            <span style="grid-area: 1 / 3 / 2 / 4">  <a href="{{ route('products.show', ['product' => $product])}}"><x-misc.icon name="chevron-right"/></a> </span>
                             
                         </div>
                         

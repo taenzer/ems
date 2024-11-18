@@ -39,7 +39,7 @@
                                 @method("DELETE")
                                 <input type="hidden" name="device_id" value="{{ $token->id }}">
                                 <x-danger-button>
-                                    <x-icon name="delete" color="white"></x-icon>
+                                    <x-misc.icon name="delete" color="white"></x-misc.icon>
                                 </x-danger-button>
                                 
                             </form>

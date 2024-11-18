@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-header heading="Ticketbestellung #{{ $order->id }}">
             <x-slot name="beforeHeading">
-                <a href="{{ route('tickets.orders.index') }}"><x-icon name="chevron-left"></x-icon></a>
+                <a href="{{ route('tickets.orders.index') }}"><x-misc.icon name="chevron-left"></x-misc.icon></a>
             </x-slot>
             <x-slot name="actions">
                 <a href="{{ route('tickets.orders.download', ['ticketOrder' => $order]) }}"><x-primary-button>Tickets
@@ -43,11 +43,11 @@
                             </div>
                             <div>
                                 @if ($ticket->checkins->count() == $ticket->permits->count())
-                                    <x-icon name="check-circle" size="1.5" color="green" />
+                                    <x-misc.icon name="check-circle" size="1.5" color="green" />
                                 @elseif($ticket->checkins->count() > 0)
-                                    <x-icon name="radio-button-checked" size="1.5" color="orange" />
+                                    <x-misc.icon name="radio-button-checked" size="1.5" color="orange" />
                                 @else
-                                    <x-icon name="radio-button-unchecked" size="1.5" color="gray" />
+                                    <x-misc.icon name="radio-button-unchecked" size="1.5" color="gray" />
                                 @endif
                             </div>
 
@@ -57,9 +57,9 @@
                     <p>Zu dieser Bestellung gehören keine Tickets</p>
                 @endforelse
                 <p class="flex items-center justify-end gap-1 rounded bg-slate-100 p-2 text-sm"><span
-                        class="font-semibold">Legende:</span> <x-icon name="check-circle" size="1.5"
-                        color="green" /> = Überall eingecheckt; <x-icon name="radio-button-checked" size="1.5"
-                        color="orange" /> = mind. einmal eingecheckt, für weitere Events gültig; <x-icon
+                        class="font-semibold">Legende:</span> <x-misc.icon name="check-circle" size="1.5"
+                        color="green" /> = Überall eingecheckt; <x-misc.icon name="radio-button-checked" size="1.5"
+                        color="orange" /> = mind. einmal eingecheckt, für weitere Events gültig; <x-misc.icon
                         name="radio-button-unchecked" size="1.5" color="gray" /> = noch nicht eingecheckt</p>
             </div>
         </x-body-box>

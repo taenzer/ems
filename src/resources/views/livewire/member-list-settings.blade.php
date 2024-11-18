@@ -13,11 +13,11 @@
         @foreach ($list as $index => $member)
             <div class="flex gap-2" wire:key="{{ $index }}">
                 <x-input name="memberName.{{ $index }}" placeholder="Name eintragen" class="w-full" wire:model.live="list.{{ $index }}" wire:change="inputChanged"/>
-                <x-danger-button wire:click="removeMember({{ $index }})"><x-icon name="delete" color="white" /></x-danger-button>
+                <x-danger-button wire:click="removeMember({{ $index }})"><x-misc.icon name="delete" color="white" /></x-danger-button>
             </div>
         @endforeach
        
-        <x-secondary-button wire:click="addMember" class="py-3 px-3 gap-2"><x-icon name="person-add" />Weitere Person hinzufügen</x-secondary-button>
+        <x-secondary-button wire:click="addMember" class="py-3 px-3 gap-2"><x-misc.icon name="person-add" />Weitere Person hinzufügen</x-secondary-button>
     </div>
     @endif
 
@@ -30,7 +30,7 @@
     <div>
         @if (session()->has('success_message'))
             <div wire:transition.origin.bottom class="text-green-700 flex gap-1 items-center pt-4">
-                <x-icon name="check-circle" color="green"/>{{ session('success_message') }}
+                <x-misc.icon name="check-circle" color="green"/>{{ session('success_message') }}
             </div>
         @endif
     </div>
