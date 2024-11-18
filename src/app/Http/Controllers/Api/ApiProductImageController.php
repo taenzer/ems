@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,12 +11,13 @@ use Illuminate\Http\Request;
 class ApiProductImageController extends Controller
 {
     // Output all Product Images of active Events as ZIP File
-    public function index(){
+    public function index()
+    {
 
         // Get all event id's of users active events
-        $images = auth()->user()->getEvents()->flatMap(function($event){
+        $images = auth()->user()->getEvents()->flatMap(function ($event) {
             return $event->products()->where("image", "!=", null)
-            ->pluck("image");
+                ->pluck("image");
         })->unique();
 
         //$images = [];
@@ -27,16 +29,16 @@ class ApiProductImageController extends Controller
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
         foreach ($images as $image_path) {
-            if(!isset($image_path)){
+            if (!isset($image_path) || !file_exists(storage_path("app/public/$image_path"))) {
                 continue;
             }
-           $zip->addFile(storage_path("app/public/$image_path"), basename($image_path));
+            $zip->addFile(storage_path("app/public/$image_path"), basename($image_path));
         }
 
-        if(empty($images)){
+        if (empty($images)) {
             $zip->addEmptyDir(".");
         }
-        
+
         $zip->close();
 
         return response()->download($zip_file);
