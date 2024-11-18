@@ -13,7 +13,7 @@ steps:
   - name: Build Node Dependencies
     image: node
     commands:
-      - cd backend
+      - cd src
       - npm install
       - npm run build
   - name: Create and upload Docker Image
@@ -32,8 +32,8 @@ steps:
       tags:
         - latest
         - build-${DRONE_BUILD_NUMBER}
-      dockerfile: ./backend/Dockerfile
-      context: ./backend
+      dockerfile: ./DockerfileProd
+      context: ./src
   - name: Refresh Docker Stack
     image: plugins/webhook
     settings:

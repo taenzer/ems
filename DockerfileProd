@@ -16,10 +16,6 @@ RUN apk add --no-cache php82-pecl-redis
 
 RUN apk add --no-cache zlib-dev libpng-dev sqlite-dev curl-dev libzip-dev
 
-# Installing NPM for dev server
-RUN apk add --no-cache nodejs-current npm
-RUN npm install concurrently --save-dev
-
 RUN apk update && apk add --no-cache \
     autoconf \
     build-base \
@@ -39,4 +35,13 @@ RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN rm -rf composer-setup.php
 
+# Building process
+COPY . .
+RUN composer install --no-dev
+RUN chown -R nobody:nobody /var/www/html/storage
+
+# Creating Storage Link
+RUN php artisan storage:link
+
 EXPOSE 80
+CMD ["supervisord", "-c", "/etc/supervisor.d/supervisord.ini"]
