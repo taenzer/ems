@@ -16,6 +16,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
         <script src="https://cdn.tailwindcss.com"></script>
+        @livewireStyles
         
         
         {{-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script> --}}
@@ -39,9 +40,9 @@
                 {{ $slot }}
             </main>
         </div>
+        @livewireScripts
     </body>
     <footer>
-        <livewire:scripts />
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         @stack('custom-js')
     </footer>

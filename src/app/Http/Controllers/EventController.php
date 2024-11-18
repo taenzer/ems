@@ -10,6 +10,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class EventController extends Controller
 {
 
+    public function showOrderProtocoll(Event $event){
+        return view('event.orderProtocoll', [
+            "event" => $event
+        ]);
+    }
+
     public function generateReport(Request $request, Event $event)
     {
         $attributes = $request->validate([

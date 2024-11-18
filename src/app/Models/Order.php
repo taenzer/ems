@@ -26,4 +26,9 @@ class Order extends Model
     public function event(){
         return $this->belongsTo(Event::class);
     }
+
+    public function getMemberNameIfPresent(){
+        $meta = $this->meta()->where("key", "ordered_by_member")->first();
+        return isset($meta) ? $meta->value : null;
+    }
 }
