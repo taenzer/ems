@@ -16,10 +16,6 @@ RUN apk add --no-cache php82-pecl-redis
 
 RUN apk add --no-cache zlib-dev libpng-dev sqlite-dev curl-dev libzip-dev
 
-# Installing NPM for dev server
-RUN apk add --no-cache nodejs-current npm
-RUN npm install concurrently --save-dev
-
 RUN apk update && apk add --no-cache \
     autoconf \
     build-base \
@@ -39,10 +35,30 @@ RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN rm -rf composer-setup.php
 
+# Configure supervisor
+# RUN mkdir -p /etc/supervisor.d/
+# COPY .docker/supervisord.ini /etc/supervisor.d/supervisord.ini
+
+# Configure PHP
+RUN mkdir -p /run/php/
+RUN touch /run/php/php8.2-fpm.pid
+
+COPY .docker/php-fpm.conf /etc/php82/php-fpm.conf
+COPY .docker/php.ini-production /etc/php82/php.ini
+
+# Configure nginx
+COPY .docker/nginx.conf /etc/nginx/
+COPY .docker/nginx-laravel.conf /etc/nginx/modules/
+
+RUN mkdir -p /run/nginx/
+RUN touch /run/nginx/nginx.pid
+
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
+
 # Building process
 COPY . .
 RUN composer install --no-dev
-RUN npm i
 RUN chown -R nobody:nobody /var/www/html/storage
 
 # Creating Storage Link
