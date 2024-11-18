@@ -7,7 +7,7 @@ if(isset($member_name) && mb_strlen($member_name) > 7){
 
 @endphp
 
-@switch($gateway)
+@switch(strtolower($gateway))
     @case('member')
         <span class="bg-blue-100 text-blue-800  dark:bg-blue-900 dark:text-blue-300 border-blue-400 {{ $globalClasses }}">
             <x-misc.icon name="person" color="#1e40af"/>

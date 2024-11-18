@@ -51,7 +51,7 @@ class EventOrderProtocoll extends Component
         switch($column){
             case 'gateway':
                 $member_name = $order->getMemberNameIfPresent();
-                return isset($member_name) ? $order->gateway . "-" . $member_name : $order->gateway;
+                return strtolower(isset($member_name) ? $order->gateway . "-" . $member_name : $order->gateway);
             case 'total':
                 return $order->total;
             case 'id':
