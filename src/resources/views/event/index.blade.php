@@ -9,7 +9,7 @@
     </x-slot>
 
     <x-body>
-        @foreach ($events as $event)
+        @forelse ($events as $event)
         <x-body-box>
             <div
             class="grid-rows-2 gap-x-2"
@@ -24,7 +24,24 @@
             </div>
             
         </x-body-box>
-        @endforeach
+
+        @empty
+        <x-body-box><p class="font-semibold">Keine Events gefunden!</p></x-body-box>
+        @endforelse
+
+        @if(!$include_archived)
+            <div class="bg-gray-200 p-4 rounded">
+                <p class="mb-2">
+                    <small>Hinweis: Inaktive Veranstaltungen, deren Datum nicht im aktuellen Jahr liegt, werden automatisch archiviert. Um auch diese anzuzeigen, klicke auf den Button:</small>
+                </p>
+                <a href="{{ route('events.index', ['include_archived' => true]) }}" title="Archivierte Veranstaltungen anzeigen">
+                    <x-secondary-button>Archivierte Veranstaltungen anzeigen</x-secondary-button>
+                </a>
+            </div>
+            {{ $events->links() }}
+        @else
+            {{ $events->appends(['include_archived' => true])->links() }}
+        @endif
         
     </x-body>
 

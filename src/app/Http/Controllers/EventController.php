@@ -39,10 +39,11 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         return view('event.index', [
-            'events' => auth()->user()->getEvents(false),
+            'events' => auth()->user()->getEvents(false, !$request->has('include_archived'), true),
+            'include_archived' => $request->has('include_archived'),
         ]);
     }
 

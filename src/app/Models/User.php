@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,26 +25,50 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function isAdmin(){
+        return $this->is_admin;
+    }
+
     public function events(){
         return $this->hasMany(Event::class);
     }
-    
     public function sharedEvents()
     {
         return $this->belongsToMany(Event::class, 'shares', 'shared_to');
     }
 
-    public function allAccessibleEvents($onlyActive = true)
-    {
-        if($onlyActive){
-            return $this->events()->where("active", true)->union($this->sharedEvents()->where("active", true)->select("events.*"))->orderByDesc("date");
-        }else{
-            return $this->events()->union($this->sharedEvents()->select("events.*"))->orderByDesc("date");
-        }
-    }
 
-    public function getEvents($onlyActive = true){
-        return $this->allAccessibleEvents($onlyActive)->orderBy('date', 'asc')->get();
+    public function getEvents(bool $onlyActive = true, bool $currentYear = false, bool $paginated = false){
+        // Basis-Query für alle Events
+        $query = Event::query();
+
+        // Admin-Sonderfall: Admin sieht alle Events, aber die Filter gelten trotzdem
+        if (!($this->is_admin && session('superadmin', false)) ) {
+            // Für normale Benutzer: Eigene und freigegebene Events kombinieren
+            $ownEventsQuery = $this->events();
+            $sharedEventsQuery = $this->sharedEvents()->select("events.*");
+
+            $query = $ownEventsQuery->union($sharedEventsQuery);
+        }
+
+        // Bedingung: Nur aktive Events
+        if ($onlyActive) {
+            $query->where('active', true);
+        }
+
+        // Bedingung: Nur Events aus dem aktuellen Jahr
+        if ($currentYear) {
+            $currentYear = Carbon::now()->year;
+            $query->where(function ($subQuery) use ($currentYear) {
+                $subQuery->whereYear('date', $currentYear)
+                    ->orWhere('active', true);
+            });
+        }
+
+        $query->orderByDesc('date');
+
+        // Ergebnisse abrufen
+        return $paginated ? $query->paginate() : $query->get();
     }
 
     public function getEventTickets()
