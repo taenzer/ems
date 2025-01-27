@@ -9,7 +9,9 @@ use App\Http\Controllers\TicketProductController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketOrderController;
 use App\Http\Controllers\AnalyticController;
+use App\Http\Controllers\NewsController;
 use App\Http\Middleware\EventOwnerOrShareOnly;
+use App\Models\News;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +30,17 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('dashboard', ['news' => News::orderByDesc("created_at")->paginate(5)]);
+    })->name('dashboard');
+    Route::get('/news/create', [NewsController::class, 'create'])->middleware('admin')->name("news.create");
+    Route::post('/news/create', [NewsController::class, 'store'])->middleware('admin')->name("news.store");
+    Route::patch('/superadmin', function(){
+        $isEnabled = session('superadmin', false);
+        session(["superadmin" => !$isEnabled]);
+        return redirect()->back();
+    })->middleware('admin')->name("superadmin");
     Route::resource('events', EventController::class)->middleware(EventOwnerOrShareOnly::class);
     Route::put("events/{event}/status", [EventController::class, 'toggleStatus'])->name("events.status.toggle")->middleware(EventOwnerOrShareOnly::class);
     Route::get("events/{event}/report", [EventController::class, 'generateReport'])->name("events.report.create")->middleware(EventOwnerOrShareOnly::class);
@@ -69,11 +82,6 @@ Route::middleware('auth')->group(function () {
     Route::get('analytics/eventProductSales', [AnalyticController::class, 'eventProductSales'])->name('analytics.eventProductSales');
 });
 
-
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

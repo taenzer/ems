@@ -22,6 +22,9 @@ class EventOwnerOrShareOnly
 
         if(!isset($event) || !($event instanceof Event))
             return $next($request);
+
+        if($request->user()->isAdmin() && session('superadmin', false))
+            return $next($request);
         
         if($event->user_id != auth()->id() && !auth()->user()->sharedEvents->contains($event))
             return abort(403, "Zugriff verweigert");

@@ -31,6 +31,8 @@
                 </div>
             </div>
 
+            
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
@@ -67,6 +69,15 @@
                         </form>
                     </x-slot>
                 </x-dropdown>
+                @if(auth()->user()->isAdmin())
+                    <form action="{{ route('superadmin') }}" method="POST">
+                        @csrf
+                        @method("PATCH")
+                        <button type="submit" class="{{ session('superadmin', false) ? 'bg-orange-300' : 'bg-gray-200' }} p-1 rounded">
+                            <x-misc.icon name="crown"/> 
+                        </button>
+                    </form>
+                @endif
             </div>
 
             <!-- Hamburger -->
