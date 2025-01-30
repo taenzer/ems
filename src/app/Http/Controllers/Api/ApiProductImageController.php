@@ -27,15 +27,17 @@ class ApiProductImageController extends Controller
 
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $fileErrors = [];
 
         foreach ($images as $image_path) {
             if (!isset($image_path) || !file_exists(storage_path("app/public/$image_path"))) {
+                $fileErrors[] = $image_path;
                 continue;
             }
             $zip->addFile(storage_path("app/public/$image_path"), basename($image_path));
         }
 
-        if (empty($images)) {
+        if (empty($images) || count($fileErrors) >= $images->count()) {
             $zip->addEmptyDir(".");
         }
 
