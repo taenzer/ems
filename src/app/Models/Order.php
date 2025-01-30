@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['event_id','gateway', 'total','created_at'];
+    protected $fillable = ['event_id','gateway', 'total','created_at', 'unique_order_id'];
 
     public function setCreatedAttribute($value){
         $this->attributes['created_at'] = $value;

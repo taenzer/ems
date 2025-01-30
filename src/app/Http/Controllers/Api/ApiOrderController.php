@@ -39,19 +39,21 @@ class ApiOrderController extends Controller
             "*.meta" => "nullable|array",
             "*.total" => "required|numeric",
             "*.items" => "required|array",
+            "*.uniqueOrderId" => "required|string|unique:orders,unique_order_id",
             "*.items.*.product_id" => "required_without:*.items.*.productId",
             "*.items.*.productId" => "required_without:*.items.*.product_id",
             "*.items.*.name" => "required_with:*.items.*|string",
             "*.items.*.price" => "required_with:*.items.*|numeric",
             "*.items.*.quantity" => "required_with:*.items.*|integer",
             "*.items.*.itemTotal" => "required_with:*.items.*|numeric",
-        ]);
+        ], ["*.uniqueOrderId" => "UOID Exception! Have you already synced? :input"]);
         //return $attributes;
         // foreach orders as order_data
         foreach ($attributes as $order_data) {
             $order_data['event_id'] = $order_data['eventId'] ?? $order_data['event_id'] ?? null;
             $order_data['created_at'] = $order_data['created'] ?? $order_data['created_at'] ?? null;
-            unset($order_data['eventId'], $order_data['created']);
+            $order_data['unique_order_id'] = $order_data['uniqueOrderId'];
+            unset($order_data['eventId'], $order_data['created'], $order_data['uniqueOrderId']);
             
             $order = Order::create($order_data);
             foreach ($order_data["items"] as $item_data) {

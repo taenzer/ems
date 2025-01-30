@@ -15,9 +15,7 @@ class ApiEventController extends Controller
      */
     public function index()
     {
-        return auth()->user()->allAccessibleEvents(false)
-        ->orderBy('date', 'asc')
-        ->get()
+        return auth()->user()->getEvents(true)
         ->map(function ($event) {
             unset($event->created_at, $event->updated_at, $event->active, $event->user_id); // Entferne bestimmte Attribute
             return $event;
